@@ -1,18 +1,73 @@
+
+<header>
+    <h1>Influencia COVID 19 distribuidas por comunidades</h1>
+
+    <p class="txtright"> Fuente de datos oficial: <a href="https://covid19.isciii.es/">https://covid19.isciii.es/</a> </p>
+    <p class="txtright"> Ultima actualización: ({{jsonResumeSpain.Fecha}} - {{jsonResumeSpain.Hora}}h)  </p>
+</header>
+
+<!-- Spain charts -->
+<section>
+   <ul class="kpis">
+        <li>
+            <p class="number">España</p>
+            <p>Resumen</p>
+        </li>
+        <li>
+            <p class="number">{{jsonResumeSpain.Casos24h | number}}</p>
+            <p>Ultimas 24H</p>
+        </li>
+        <li>
+            <p class="number">{{jsonResumeSpain.Casos | number}}</p>
+            <p>Total de casos</p>
+        </li>
+        <li>
+            <p class="number">{{jsonResumeSpain.Defunciones | number}}</p>
+            <p>Total de fallecidos</p>
+        </li>
+        <li>
+            <p class="number">{{jsonResumeSpain.Recuperados | number}}</p>
+            <p>Total de recuperados</p>
+        </li>
+        <li>
+            <p class="number">{{jsonResumeSpain.Hospitalizados | number}}</p>
+            <p>Total de hospitalizados</p>
+        </li>
+   </ul>
+
+</section>
+
+<!-- 3 charts by Regions -->
+<section class="trisection">
+    <article>
+        <h2>Comunidades por casos acumulados</h2>
+        <div  id="GraphE1" #GraphE1></div>
+    </article>
+
+    <article >
+        <h2>Comunidades en las ultimas 24H</h2>
+        <div id="GraphE2" #GraphE2></div>
+    </article>
+
+    <article >
+        <h2>Comunidades por Inc.14d</h2>
+        <div id="GraphE3" #GraphE3></div>
+    </article>
+</section>
+
+<!-- Region selector -->
 <header>
     <div class="area1">
-        <h1>Influencia COVID 19 por comunidad</h1>
+        <h2>Selecciona tu comunidad</h2>
         <select  [ngModel]="selectedCCAA" (ngModelChange)="onChange($event)">
             <option [value]="ccaa.code" *ngFor="let ccaa of options">
                 {{ccaa.name}}
             </option>
         </select>
     </div>
-    <div class="area2">
-        <h4> Fuente de datos oficial(28/03/2020): <a href="https://covid19.isciii.es/">https://covid19.isciii.es/</a> </h4>
-    </div>
 </header>
 
-
+<!-- Region selected charts -->
 <section>
     <article>
         <h2>COVID 19: Cantidades totales incrementales (valores oficiales)</h2>

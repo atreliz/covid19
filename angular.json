@@ -10,7 +10,7 @@
           "style": "scss"
         }
       },
-      "root": "/covid19/",
+      "root": "",
       "sourceRoot": "src",
       "prefix": "app",
       "architect": {
