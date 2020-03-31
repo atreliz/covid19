@@ -321,7 +321,6 @@ class CCAAchartComponent {
         else {
             var localUrl = "/assets/data/ccaa.csv";
         }
-        var localUrl = "/assets/data/ccaa.csv";
         this.http.get(localUrl, {
             headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({}),
             responseType: 'text'
