@@ -497,7 +497,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         value: function getSpainCSV() {
           var _this = this;
 
-          var localUrl = "/assets/data/data.csv";
+          if (window.location.href === "http://atreliz.com/covid19/") {
+            var localUrl = "http://atreliz.com/covid19/assets/data/data.csv";
+          } else {
+            var localUrl = "/assets/data/data.csv";
+          }
+
           this.http.get(localUrl, {
             headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({}),
             responseType: 'text'
@@ -512,7 +517,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         value: function getCSV() {
           var _this2 = this;
 
-          var localUrl = "/assets/data/serie_historica_acumulados.csv";
+          if (window.location.href === "http://atreliz.com/covid19/") {
+            var localUrl = "http://atreliz.com/covid19/assets/data/serie_historica_acumulados.csv";
+          } else {
+            var localUrl = "/assets/data/serie_historica_acumulados.csv";
+          }
+
           this.http.get(localUrl, {
             headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({}),
             responseType: 'text'
@@ -544,6 +554,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "getRegionsCSV",
         value: function getRegionsCSV() {
           var _this3 = this;
+
+          if (window.location.href === "http://atreliz.com/covid19/") {
+            var localUrl = "http://atreliz.com/covid19/assets/data/ccaa.csv";
+          } else {
+            var localUrl = "/assets/data/ccaa.csv";
+          }
 
           var localUrl = "/assets/data/ccaa.csv";
           this.http.get(localUrl, {
