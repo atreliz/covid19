@@ -269,10 +269,10 @@ class CCAAchartComponent {
     //Get resume españa CSV
     getSpainCSV() {
         if (window.location.href === "http://atreliz.com/covid19/") {
-            var localUrl = "http://atreliz.com/covid19/assets/data/data.csv";
+            var localUrl = "http://atreliz.com/covid19/assets/data/data.csv?v=" + new Date().getTime();
         }
         else {
-            var localUrl = "/assets/data/data.csv";
+            var localUrl = "/assets/data/data.csv?v=" + new Date().getTime();
         }
         this.http.get(localUrl, {
             headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({}),
@@ -286,10 +286,10 @@ class CCAAchartComponent {
     //get fulll CSV
     getCSV() {
         if (window.location.href === "http://atreliz.com/covid19/") {
-            var localUrl = "http://atreliz.com/covid19/assets/data/serie_historica_acumulados.csv";
+            var localUrl = "http://atreliz.com/covid19/assets/data/serie_historica_acumulados.csv?v=" + new Date().getTime();
         }
         else {
-            var localUrl = "/assets/data/serie_historica_acumulados.csv";
+            var localUrl = "/assets/data/serie_historica_acumulados.csv?v=" + new Date().getTime();
         }
         this.http.get(localUrl, {
             headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({}),
@@ -316,10 +316,10 @@ class CCAAchartComponent {
     }
     getRegionsCSV() {
         if (window.location.href === "http://atreliz.com/covid19/") {
-            var localUrl = "http://atreliz.com/covid19/assets/data/ccaa.csv";
+            var localUrl = "http://atreliz.com/covid19/assets/data/ccaa.csv?v=" + new Date().getTime();
         }
         else {
-            var localUrl = "/assets/data/ccaa.csv";
+            var localUrl = "/assets/data/ccaa.csv?v=" + new Date().getTime();
         }
         this.http.get(localUrl, {
             headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({}),
