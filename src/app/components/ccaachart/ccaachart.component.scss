@@ -3,8 +3,11 @@
       text-align:right;
       margin-bottom: 0px;
 }
+.lastp{
+      margin-bottom:0px;
+}
 
-header,footer{
+header{
       float: left;
       width: 96%;
       margin: .5% 2%;
@@ -12,6 +15,12 @@ header,footer{
       h2{ float:left; width:50%; }
       .area1{ float:left; width:48%; text-align:left;}
       .area2{ margin-left:2%; float:right; width:50%; text-align:right;}
+}
+footer{
+      float: left;
+      width: 80%;
+      padding: 2% 10%;
+      border-top:3px solid grey;
 }
 
 header{
@@ -24,26 +33,39 @@ section{
       .kpis{
             list-style-type: none;
             float: left;
-            width: 96%;
+            width: 46%;
             margin: 0% 2%;
-            padding: 0%;
+            padding: 0% 2%;
+            box-sizing: border-box;
 
             li{
+                  height: 149px;
                   float: left;
-                  width: 14.6%;
-                  padding: 1%;
-                  margin: 1%;
+                  width: 40%;
+                  padding: 23px 2%;
+                  margin: 13px 5%;
                   box-shadow: 0px 0px 2px #ccc;
                   text-align: center;
                   border-radius: 20px;
-                  box-sizing: border-box;
                   background: #fff;
+
+                  box-sizing: border-box;
+                  
                   .number{
                         font-size:25px;
                         color: rgb(31, 119, 180);
                   }
             }
       }
+      .pie{
+            float: left;
+            width: 46%;
+            height: 500px;
+            margin: 1% 2%;
+            padding: 2%;
+            box-sizing: border-box;
+      }
+
       &.trisection{
             article{
                   float: left;
@@ -80,19 +102,43 @@ select{
       float: left;
 }
 
+.material-icons{
+      font-size: 35px
+}
+
 @media only screen and (max-width: 700px) {
-      header,footer{
+      header{
             float: left;
             width: 96%;
             margin: .5% 2%;
-            h1{ float:left; width:100%; }
+            h1,h2{ float:left; width:96%; margin:2% }
             .area1{ float:left; width:100%; text-align:left;}
             .area2{ float:left; width:100%; text-align:left;}
       }
+
+      footer{
+            float: left;
+            width: 80%;
+            padding: 2% 10%;
+            border-top:3px solid grey;
+            margin-top:5%;
+      }
       select{
-            font-size: 16px;
+            border:1px ;           
             float: left;
       }
+
+      section .kpis,section .pie {
+            margin-top:5%;
+                  float: left;
+                  width: 96%;
+                  margin:2%
+            li{
+                  width: 48%;
+            }
+      }
+
+
       section{
             float: left;
             width: 100%;
@@ -100,6 +146,16 @@ select{
                   float: left;
                   width: 96%;
                   height: 750px;
+            }
+      }
+
+      section.trisection{
+            float: left;
+            width: 100%;
+            article{
+                  float: left;
+                  width: 96%;
+                  height: 550px;
             }
       }
 

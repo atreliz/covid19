@@ -355,13 +355,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     var _c0 = ["GraphA"];
     var _c1 = ["GraphB"];
-    var _c2 = ["GraphE1"];
-    var _c3 = ["GraphE2"];
-    var _c4 = ["GraphE3"];
+    var _c2 = ["GraphE0"];
+    var _c3 = ["GraphE1"];
+    var _c4 = ["GraphE2"];
+    var _c5 = ["GraphE3"];
+    var _c6 = ["GraphE4"];
+    var _c7 = ["GraphE5"];
+    var _c8 = ["GraphE6"];
 
-    function CCAAchartComponent_option_67_Template(rf, ctx) {
+    function CCAAchartComponent_option_107_Template(rf, ctx) {
       if (rf & 1) {
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "option", 19);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "option", 36);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1);
 
@@ -369,13 +373,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       if (rf & 2) {
-        var ccaa_r6 = ctx.$implicit;
+        var ccaa_r10 = ctx.$implicit;
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("value", ccaa_r6.code);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("value", ccaa_r10.code);
 
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", ccaa_r6.name, " ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", ccaa_r10.name, " ");
       }
     }
 
@@ -387,6 +391,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         this.madridDataFull = {};
         this.myccaadata = [];
         this.jsonResumeSpain = [];
+        this.ccaaComparatorMode = 'total';
         this.httpOptions = {
           headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({}),
           responseType: 'text'
@@ -459,51 +464,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           this.getSpainCSV(); //spain general data
 
           this.getRegionsCSV(); //Regions top values to compare
-        }
-      }, {
-        key: "onChange",
-        value: function onChange(value) {
-          this.massageData(value, "update");
-        }
-      }, {
-        key: "csvToJSON",
-        value: function csvToJSON(csv) {
-          var lines = csv.split("\n");
-          var result = [];
-          var headers = lines[0].split(",");
-
-          for (var i = 1; i < lines.length - 1; i++) {
-            var obj = {};
-            var currentline = lines[i].split(",");
-
-            for (var j = 0; j < headers.length; j++) {
-              obj[headers[j]] = currentline[j];
-            }
-
-            result.push(obj);
-          }
-          /*
-          if (callback && (typeof callback === 'function')) {
-              return callback(result);
-          }
-          */
-
-
-          return result;
-        } //Get resume españa CSV
+        } //--AJAX functions
+        //Get resume españa CSV
 
       }, {
         key: "getSpainCSV",
         value: function getSpainCSV() {
           var _this = this;
 
-          var localUrl = "/assets/data/data.csv";
+          if (window.location.href === "http://atreliz.com/covid19/") {
+            var localUrl = "http://atreliz.com/covid19/assets/data/data.csv?v=" + new Date().getTime();
+          } else {
+            var localUrl = "/assets/data/data.csv?v=" + new Date().getTime();
+          }
+
           this.http.get(localUrl, {
             headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({}),
             responseType: 'text'
           }).subscribe(function (data) {
             console.log("----CSV ", data);
             _this.jsonResumeSpain = _this.csvToJSON(data)[0];
+
+            _this.drawPie(_this.jsonResumeSpain);
           });
         } //get fulll CSV
 
@@ -512,7 +494,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         value: function getCSV() {
           var _this2 = this;
 
-          var localUrl = "/assets/data/serie_historica_acumulados.csv";
+          if (window.location.href === "http://atreliz.com/covid19/") {
+            var localUrl = "http://atreliz.com/covid19/assets/data/serie_historica_acumulados.csv?v=" + new Date().getTime();
+          } else {
+            var localUrl = "/assets/data/serie_historica_acumulados.csv?v=" + new Date().getTime();
+          }
+
           this.http.get(localUrl, {
             headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({}),
             responseType: 'text'
@@ -521,31 +508,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             _this2.jsonReadyFull(_this2.csvToJSON(data));
           });
-        }
-      }, {
-        key: "dynamicSort",
-        value: function dynamicSort(property) {
-          var sortOrder = 1;
+        } //get resumen de comunidades csv
 
-          if (property[0] === "-") {
-            sortOrder = -1;
-            property = property.substr(1);
-          }
-
-          return function (a, b) {
-            /* next line works with strings and numbers,
-             * and you may want to customize it to your needs
-             */
-            var result = a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0;
-            return result * sortOrder;
-          };
-        }
       }, {
         key: "getRegionsCSV",
         value: function getRegionsCSV() {
           var _this3 = this;
 
-          var localUrl = "/assets/data/ccaa.csv";
+          if (window.location.href === "http://atreliz.com/covid19/") {
+            var localUrl = "http://atreliz.com/covid19/assets/data/ccaa.csv?v=" + new Date().getTime();
+          } else {
+            var localUrl = "/assets/data/ccaa.csv?v=" + new Date().getTime();
+          }
+
           this.http.get(localUrl, {
             headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({}),
             responseType: 'text'
@@ -588,18 +563,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             function dynamicSortMultiple(props) {
               /*
-               * save the arguments object as it will be overwritten
-               * note that arguments object is an array-like object
-               * consisting of the names of the properties to sort by
-               */
+              * save the arguments object as it will be overwritten
+              * note that arguments object is an array-like object
+              * consisting of the names of the properties to sort by
+              */
               //var props = arguments;
               return function (obj1, obj2) {
                 var i = 0,
                     result = 0,
                     numberOfProperties = props.length;
                 /* try getting a different result from 0 (equal)
-                 * as long as we have extra properties to compare
-                 */
+                * as long as we have extra properties to compare
+                */
 
                 while (result === 0 && i < numberOfProperties) {
                   result = dynamicSort(props[i])(obj1, obj2);
@@ -653,8 +628,154 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             _this3.plotGraphE2(data2);
 
-            _this3.plotGraphE3(data3);
+            _this3.plotGraphE3(data3); //now build the other
+
+
+            _this3.getPopulationCSV(data1, data2, data3);
           });
+        } //get population comunidades csv
+
+      }, {
+        key: "getPopulationCSV",
+        value: function getPopulationCSV(data1, data2, data3) {
+          var _this4 = this;
+
+          var data4 = JSON.parse(JSON.stringify(data1));
+          var data5 = JSON.parse(JSON.stringify(data2));
+          var data6 = JSON.parse(JSON.stringify(data3));
+
+          if (window.location.href === "http://atreliz.com/covid19/") {
+            var localUrl = "http://atreliz.com/covid19/assets/data/population.csv?v=" + new Date().getTime();
+          } else {
+            var localUrl = "/assets/data/population.csv?v=" + new Date().getTime();
+          }
+
+          this.http.get(localUrl, {
+            headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({}),
+            responseType: 'text'
+          }).subscribe(function (data) {
+            console.log("----CSV ", data);
+
+            var populationCSV = _this4.csvToJSON(data);
+
+            console.log("---populationCSV", populationCSV);
+            console.log("---data4", data4);
+
+            var _loop = function _loop(i) {
+              populationCSV.forEach(function (item_B) {
+                if (data4.ccaa[i] === item_B.CCAA) {
+                  var relative = data4.acumulados[i] / item_B.population * 1000;
+                  data4.acumulados[i] = relative.toFixed(2);
+                  console.log(data4.ccaa[i], item_B.CCAA, data4.acumulados[i]);
+                }
+              });
+            };
+
+            for (var i = 0; i < data4.ccaa.length; i++) {
+              _loop(i);
+            }
+
+            ;
+
+            var _loop2 = function _loop2(_i) {
+              populationCSV.forEach(function (item_B) {
+                if (data5.ccaa[_i] === item_B.CCAA) {
+                  var relative = data5.ultimas[_i] / item_B.population * 1000;
+                  data5.ultimas[_i] = relative.toFixed(2);
+                  console.log(data5.ccaa[_i], item_B.CCAA, data5.ultimas[_i]);
+                }
+              });
+            };
+
+            for (var _i = 0; _i < data5.ccaa.length; _i++) {
+              _loop2(_i);
+            }
+
+            ;
+
+            var _loop3 = function _loop3(_i2) {
+              populationCSV.forEach(function (item_B) {
+                if (data6.ccaa[_i2] === item_B.CCAA) {
+                  var relative = data6.incidencia[_i2] / item_B.population * 1000;
+                  data6.incidencia[_i2] = relative.toFixed(2);
+                  console.log(data6.ccaa[_i2], item_B.CCAA, data6.incidencia[_i2]);
+                }
+              });
+            };
+
+            for (var _i2 = 0; _i2 < data6.ccaa.length; _i2++) {
+              _loop3(_i2);
+            }
+
+            ;
+            /*
+            source2.forEach( function(item){
+                data2.ccaa.push(item.CCAA)
+                data2.ultimas.push(item['Ultimas 24h'])
+            });
+              source3.forEach( function(item){
+                data3.ccaa.push(item.CCAA)
+                data3.incidencia.push(item.Incidencia)
+            });
+            */
+
+            _this4.plotGraphE4(data4);
+
+            _this4.plotGraphE5(data5);
+
+            _this4.plotGraphE6(data6);
+          });
+        } //--AUX functions
+
+      }, {
+        key: "onChange",
+        value: function onChange(value) {
+          this.massageData(value, "update");
+        }
+      }, {
+        key: "csvToJSON",
+        value: function csvToJSON(csv) {
+          var lines = csv.split("\n");
+          var result = [];
+          var headers = lines[0].split(",");
+
+          for (var i = 1; i < lines.length - 1; i++) {
+            var obj = {};
+            var currentline = lines[i].split(",");
+
+            for (var j = 0; j < headers.length; j++) {
+              obj[headers[j]] = currentline[j];
+            }
+
+            result.push(obj);
+          }
+          /*
+          if (callback && (typeof callback === 'function')) {
+              return callback(result);
+          }
+          */
+
+
+          return result;
+        } //need?
+
+      }, {
+        key: "dynamicSort",
+        value: function dynamicSort(property) {
+          var sortOrder = 1;
+
+          if (property[0] === "-") {
+            sortOrder = -1;
+            property = property.substr(1);
+          }
+
+          return function (a, b) {
+            /* next line works with strings and numbers,
+            * and you may want to customize it to your needs
+            */
+            var result = a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0;
+            return result * sortOrder;
+          };
         }
       }, {
         key: "jsonReadyFull",
@@ -742,6 +863,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           }
         }
       }, {
+        key: "setCCAAMode",
+        value: function setCCAAMode(value) {
+          console.log("setCCAAMode", value);
+          this.ccaaComparatorMode = value;
+        } //--PLOT functions
+
+      }, {
         key: "plotGraphA",
         value: function plotGraphA() {
           Plotly.newPlot(this.GraphA.nativeElement, [{
@@ -765,6 +893,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             mode: 'lines',
             name: 'UCI acumulados'
           }], {
+            legend: {
+              x: 0,
+              y: 1
+            },
             margin: {
               t: 0
             }
@@ -797,6 +929,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             type: 'bar',
             name: 'UCI al dia'
           }], {
+            legend: {
+              x: 0,
+              y: 1
+            },
             margin: {
               t: 20
             }
@@ -869,7 +1005,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             responsive: true,
             showEditInChartStudio: false
           });
-        }
+        } //compare comunidades by total
+
       }, {
         key: "plotGraphE1",
         value: function plotGraphE1(data) {
@@ -923,6 +1060,80 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             responsive: true,
             displayModeBar: false
           });
+        } //compare comunidades by total with population
+
+      }, {
+        key: "plotGraphE4",
+        value: function plotGraphE4(data) {
+          Plotly.newPlot(this.GraphE4.nativeElement, [{
+            y: data.ccaa,
+            x: data.acumulados,
+            type: 'bar',
+            orientation: 'h'
+          }], {
+            margin: {
+              t: 0,
+              l: 120
+            }
+          }, {
+            responsive: true,
+            displayModeBar: false
+          });
+        }
+      }, {
+        key: "plotGraphE5",
+        value: function plotGraphE5(data) {
+          Plotly.newPlot(this.GraphE5.nativeElement, [{
+            y: data.ccaa,
+            x: data.ultimas,
+            type: 'bar',
+            orientation: 'h'
+          }], {
+            margin: {
+              t: 0,
+              l: 120
+            }
+          }, {
+            responsive: true,
+            displayModeBar: false
+          });
+        }
+      }, {
+        key: "plotGraphE6",
+        value: function plotGraphE6(data) {
+          Plotly.newPlot(this.GraphE6.nativeElement, [{
+            y: data.ccaa,
+            x: data.incidencia,
+            type: 'bar',
+            orientation: 'h'
+          }], {
+            margin: {
+              t: 0,
+              l: 120
+            }
+          }, {
+            responsive: true,
+            displayModeBar: false
+          });
+        }
+      }, {
+        key: "drawPie",
+        value: function drawPie(data) {
+          console.log("pie", data);
+          var enfermos = data.Casos - data.Defunciones - data.Recuperados;
+          Plotly.newPlot(this.GraphE0.nativeElement, [{
+            values: [enfermos, data.Recuperados, data.Defunciones],
+            labels: ['Enfermos', 'Recuperados', 'Defunciones'],
+            type: 'pie',
+            marker: {
+              colors: ["#ff7f0e", "#2d9f2c", "#1f77b4"]
+            }
+          }], {
+            height: 420
+          }, {
+            responsive: true,
+            displayModeBar: false
+          });
         }
       }]);
 
@@ -947,6 +1158,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵstaticViewQuery"](_c3, true);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵstaticViewQuery"](_c4, true);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵstaticViewQuery"](_c5, true);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵstaticViewQuery"](_c6, true);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵstaticViewQuery"](_c7, true);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵstaticViewQuery"](_c8, true);
         }
 
         if (rf & 2) {
@@ -954,215 +1173,191 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵloadQuery"]()) && (ctx.GraphA = _t.first);
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵloadQuery"]()) && (ctx.GraphB = _t.first);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵloadQuery"]()) && (ctx.GraphE0 = _t.first);
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵloadQuery"]()) && (ctx.GraphE1 = _t.first);
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵloadQuery"]()) && (ctx.GraphE2 = _t.first);
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵloadQuery"]()) && (ctx.GraphE3 = _t.first);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵloadQuery"]()) && (ctx.GraphE4 = _t.first);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵloadQuery"]()) && (ctx.GraphE5 = _t.first);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵloadQuery"]()) && (ctx.GraphE6 = _t.first);
         }
       },
-      decls: 98,
-      vars: 19,
-      consts: [[1, "txtright"], ["href", "https://covid19.isciii.es/"], [1, "kpis"], [1, "number"], [1, "trisection"], ["id", "GraphE1"], ["GraphE1", ""], ["id", "GraphE2"], ["GraphE2", ""], ["id", "GraphE3"], ["GraphE3", ""], [1, "area1"], [3, "ngModel", "ngModelChange"], [3, "value", 4, "ngFor", "ngForOf"], [1, "explain"], ["id", "GraphA"], ["GraphA", ""], ["id", "GraphB"], ["GraphB", ""], [3, "value"]],
+      decls: 145,
+      vars: 24,
+      consts: [[2, "margin-bottom", "20px"], [1, "kpis"], [1, "number"], [1, "number", 2, "margin-top", "15px"], [1, "number", "lastp", 2, "margin-top", "15px"], [1, "material-icons"], [1, "lastp"], [1, "pie"], [2, "margin-bottom", "0px"], ["id", "GraphE0"], ["GraphE0", ""], [1, "area1"], [1, "trisection"], ["id", "GraphE1"], ["GraphE1", ""], ["id", "GraphE2"], ["GraphE2", ""], ["id", "GraphE3"], ["GraphE3", ""], ["id", "GraphE4"], ["GraphE4", ""], ["id", "GraphE5"], ["GraphE5", ""], ["id", "GraphE6"], ["GraphE6", ""], [3, "ngModel", "ngModelChange"], [3, "value", 4, "ngFor", "ngForOf"], [1, "explain"], ["id", "GraphA"], ["GraphA", ""], ["id", "GraphB"], ["GraphB", ""], [1, "txtright"], ["href", "https://covid19.isciii.es/"], [1, "txtright", 2, "margin-bottom", "20px"], ["href", "http://atreliz.com"], [3, "value"]],
       template: function CCAAchartComponent_Template(rf, ctx) {
         if (rf & 1) {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "header");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "h1");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "h1", 0);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2, "Influencia COVID 19 distribuidas por comunidades");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](3, "p", 0);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](4, " Fuente de datos oficial: ");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](3, "section");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](5, "a", 1);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "ul", 1);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](6, "https://covid19.isciii.es/");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](5, "li");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "p", 2);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](7, "Espa\xF1a");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](8, "p", 3);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](9);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](10, "p", 4);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](11);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](7, "p", 0);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](12, "li");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](8);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](13, "p", 2);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](14);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipe"](15, "number");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](16, "p");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](17, "span", 5);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](18, "query_builder");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](9, "section");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](19, "p", 6);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](10, "ul", 2);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](11, "li");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](12, "p", 3);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](13, "Espa\xF1a");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](14, "p");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](15, "Resumen");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](20, "Ultimas 24H");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](16, "li");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](21, "li");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](17, "p", 3);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](22, "p", 2);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](18);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](23);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipe"](19, "number");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](20, "p");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](21, "Ultimas 24H");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipe"](24, "number");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](25, "p");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](22, "li");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](26, "span", 5);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](23, "p", 3);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](24);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipe"](25, "number");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](26, "p");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](27, "Total de casos");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](27, "add_alarm");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](28, "li");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](28, "p", 6);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](29, "p", 3);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](30);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipe"](31, "number");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](32, "p");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](33, "Total de fallecidos");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](29, "Total de casos");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](34, "li");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](30, "li");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](35, "p", 3);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](31, "p", 2);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](36);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](32);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipe"](37, "number");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](38, "p");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](39, "Total de recuperados");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipe"](33, "number");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](34, "p");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](40, "li");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](35, "span", 5);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](41, "p", 3);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](42);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipe"](43, "number");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](44, "p");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](45, "Total de hospitalizados");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](36, "cloud");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](37, "p", 6);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](46, "section", 4);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](47, "article");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](48, "h2");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](49, "Comunidades por casos acumulados");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](50, "div", 5, 6);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](52, "article");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](53, "h2");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](54, "Comunidades en las ultimas 24H");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](55, "div", 7, 8);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](57, "article");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](58, "h2");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](59, "Comunidades por Inc.14d");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](60, "div", 9, 10);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](38, "Total de fallecidos");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](62, "header");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](39, "li");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](63, "div", 11);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](40, "p", 2);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](64, "h2");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](41);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](65, "Selecciona tu comunidad");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipe"](42, "number");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](66, "select", 12);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](43, "p");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("ngModelChange", function CCAAchartComponent_Template_select_ngModelChange_66_listener($event) {
-            return ctx.onChange($event);
-          });
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](44, "span", 5);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](67, CCAAchartComponent_option_67_Template, 2, 2, "option", 13);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](45, "directions_walk");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](46, "p", 6);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](47, "Total de recuperados");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](48, "li");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](49, "p", 2);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](50);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipe"](51, "number");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](52, "p");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](53, "span", 5);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](54, "local_hotel");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](55, "p", 6);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](56, "Total de hospitalizados");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
@@ -1170,25 +1365,55 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](68, "section");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](57, "article", 7);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](69, "article");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](58, "h2", 8);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](70, "h2");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](59);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](71, "COVID 19: Cantidades totales incrementales (valores oficiales)");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](72, "p", 14);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](73, " Estas gr\xE1ficas siempre suben por que a cada d\xEDa se suman los datos del anterior");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipe"](60, "number");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](74, "p", 14);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](61, "div", 9, 10);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](75, " Lo que hay que fijarse es la pendiente, cuanto mas plana, menor sera el numero de nuevos casos");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](63, "header");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](64, "div", 11);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](65, "h2");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](66, "Comunidades: por sus casos totales");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](67, "section", 12);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](68, "article");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](69, "h2");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](70, "Comunidades por casos acumulados");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](71, "div", 13, 14);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](73, "article");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](74, "h2");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](75, "Comunidades en las ultimas 24H");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
@@ -1200,57 +1425,193 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](79, "h2");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](80, "COVID 19: Cantidades por d\xEDa (valores calculados)");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](80, "Comunidades por Inc.14d");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](81, "p", 14);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](82, " Estas gr\xE1ficas suben y bajan, por que son los casos totales de cada d\xEDa");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](83, "p", 14);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](84, " Lo que hay que fijarse es si las columnas van bajando seg\xFAn pasan los d\xEDas, lo cual indicar\xEDa una mejora");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](85, "div", 17, 18);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](81, "div", 17, 18);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](87, "footer");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](83, "header");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](88, "p");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](84, "h2");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](89, "b");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](90, "NOTA publicada en la fuente de datos:");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](85, "Comunidades: casos por cada 1000 habitantes");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](91, " El objetivo de los datos que se publican en esta web es saber el n\xFAmero de casos acumulados a la fecha y que por tanto no se puede deducir que la diferencia entre un d\xEDa y el anterior es el n\xFAmero de casos nuevos ya que esos casos pueden haber sido recuperados de fechas anteriores Cualquier inferencia que se haga sobre las diferencias de un d\xEDa para otro deben hacerse con precauci\xF3n y son \xFAnicamente la responsabilidad el autor");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](86, "section", 12);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](87, "article");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](88, "h2");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](89, "Comunidades por casos acumulados");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](92, "p");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](93, "b");
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](94, "NOTA de este autor:");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](90, "div", 19, 20);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](95, " estas gr\xE1ficas usan los datos oficiales compartidos por el gobierno a la poblaci\xF3n. Seg\xFAn el rigor con que se han tomado esos datos, las gr\xE1ficas por d\xEDas debe tomarse como una aproximaci\xF3n.");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](92, "article");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](93, "h2");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](94, "Comunidades en las ultimas 24H");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](96, "p");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](95, "div", 21, 22);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](97, "Made by ATL");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](97, "article");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](98, "h2");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](99, "Comunidades por Inc.14d");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](100, "div", 23, 24);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](102, "header");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](103, "div", 11);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](104, "h2");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](105, "Selecciona tu comunidad");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](106, "select", 25);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("ngModelChange", function CCAAchartComponent_Template_select_ngModelChange_106_listener($event) {
+            return ctx.onChange($event);
+          });
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](107, CCAAchartComponent_option_107_Template, 2, 2, "option", 26);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](108, "section");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](109, "article");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](110, "h2");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](111, "COVID 19: Cantidades totales incrementales (valores oficiales)");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](112, "p", 27);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](113, " Estas gr\xE1ficas siempre suben por que a cada d\xEDa se suman los datos del anterior");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](114, "p", 27);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](115, " Lo que hay que fijarse es la pendiente, cuanto mas plana, menor sera el numero de nuevos casos");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](116, "div", 28, 29);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](118, "article");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](119, "h2");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](120, "COVID 19: Cantidades por d\xEDa (valores calculados)");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](121, "p", 27);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](122, " Estas gr\xE1ficas suben y bajan, por que son los casos totales de cada d\xEDa");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](123, "p", 27);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](124, " Lo que hay que fijarse es si las columnas van bajando seg\xFAn pasan los d\xEDas, lo cual indicar\xEDa una mejora");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](125, "div", 30, 31);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](127, "footer");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](128, "p", 32);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](129, " Fuente de datos oficial: ");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](130, "a", 33);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](131, "https://covid19.isciii.es/");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](132, "p", 34);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](133);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](134, "p");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](135, "b");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](136, "**NOTA publicada en la fuente de datos:");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](137, " El objetivo de los datos que se publican en esta web es saber el n\xFAmero de casos acumulados a la fecha y que por tanto no se puede deducir que la diferencia entre un d\xEDa y el anterior es el n\xFAmero de casos nuevos ya que esos casos pueden haber sido recuperados de fechas anteriores Cualquier inferencia que se haga sobre las diferencias de un d\xEDa para otro deben hacerse con precauci\xF3n y son \xFAnicamente la responsabilidad el autor");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](138, "p");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](139, "b");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](140, "**NOTA de este autor:");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](141, " estas gr\xE1ficas usan los datos oficiales compartidos por el gobierno a la poblaci\xF3n. Seg\xFAn el rigor con que se han tomado esos datos, las gr\xE1ficas por d\xEDas debe tomarse como una aproximaci\xF3n.");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](142, "p");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](143, "a", 35);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](144, "Made by ATL");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
@@ -1258,42 +1619,54 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](8);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](9);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate2"](" Ultima actualizaci\xF3n: (", ctx.jsonResumeSpain.Fecha, " - ", ctx.jsonResumeSpain.Hora, "h) ");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx.jsonResumeSpain.Fecha);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](10);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipeBind1"](19, 9, ctx.jsonResumeSpain.Casos24h));
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"]("", ctx.jsonResumeSpain.Hora, "h");
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](6);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipeBind1"](25, 11, ctx.jsonResumeSpain.Casos));
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipeBind1"](15, 12, ctx.jsonResumeSpain.Casos24h));
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](6);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](9);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipeBind1"](31, 13, ctx.jsonResumeSpain.Defunciones));
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipeBind1"](24, 14, ctx.jsonResumeSpain.Casos));
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](6);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](9);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipeBind1"](37, 15, ctx.jsonResumeSpain.Recuperados));
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipeBind1"](33, 16, ctx.jsonResumeSpain.Defunciones));
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](6);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](9);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipeBind1"](43, 17, ctx.jsonResumeSpain.Hospitalizados));
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipeBind1"](42, 18, ctx.jsonResumeSpain.Recuperados));
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](24);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](9);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipeBind1"](51, 20, ctx.jsonResumeSpain.Hospitalizados));
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](9);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"]("Situaci\xF3n en Espa\xF1a con ", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpipeBind1"](60, 22, ctx.jsonResumeSpain.Casos), " casos");
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](47);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngModel", ctx.selectedCCAA);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx.options);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](26);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate2"](" Ultima actualizaci\xF3n: (", ctx.jsonResumeSpain.Fecha, " - ", ctx.jsonResumeSpain.Hora, "h) ");
         }
       },
       directives: [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["SelectControlValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["NgModel"], _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgForOf"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["NgSelectOption"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["ɵangular_packages_forms_forms_x"]],
       pipes: [_angular_common__WEBPACK_IMPORTED_MODULE_3__["DecimalPipe"]],
-      styles: [".txtright[_ngcontent-%COMP%] {\n  text-align: right;\n  margin-bottom: 0px;\n}\n\nheader[_ngcontent-%COMP%], footer[_ngcontent-%COMP%] {\n  float: left;\n  width: 96%;\n  margin: 0.5% 2%;\n}\n\nheader[_ngcontent-%COMP%]   h1[_ngcontent-%COMP%], footer[_ngcontent-%COMP%]   h1[_ngcontent-%COMP%] {\n  color: #1f77b4;\n  font-size: 2em;\n  text-transform: uppercase;\n}\n\nheader[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%], footer[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n  float: left;\n  width: 50%;\n}\n\nheader[_ngcontent-%COMP%]   .area1[_ngcontent-%COMP%], footer[_ngcontent-%COMP%]   .area1[_ngcontent-%COMP%] {\n  float: left;\n  width: 48%;\n  text-align: left;\n}\n\nheader[_ngcontent-%COMP%]   .area2[_ngcontent-%COMP%], footer[_ngcontent-%COMP%]   .area2[_ngcontent-%COMP%] {\n  margin-left: 2%;\n  float: right;\n  width: 50%;\n  text-align: right;\n}\n\nheader[_ngcontent-%COMP%] {\n  margin-top: 50px;\n}\n\nsection[_ngcontent-%COMP%] {\n  float: left;\n  width: 100%;\n}\n\nsection[_ngcontent-%COMP%]   .kpis[_ngcontent-%COMP%] {\n  list-style-type: none;\n  float: left;\n  width: 96%;\n  margin: 0% 2%;\n  padding: 0%;\n}\n\nsection[_ngcontent-%COMP%]   .kpis[_ngcontent-%COMP%]   li[_ngcontent-%COMP%] {\n  float: left;\n  width: 14.6%;\n  padding: 1%;\n  margin: 1%;\n  box-shadow: 0px 0px 2px #ccc;\n  text-align: center;\n  border-radius: 20px;\n  box-sizing: border-box;\n  background: #fff;\n}\n\nsection[_ngcontent-%COMP%]   .kpis[_ngcontent-%COMP%]   li[_ngcontent-%COMP%]   .number[_ngcontent-%COMP%] {\n  font-size: 25px;\n  color: #1f77b4;\n}\n\nsection.trisection[_ngcontent-%COMP%]   article[_ngcontent-%COMP%] {\n  float: left;\n  width: 30%;\n  height: 550px;\n  margin: 1% 1.5%;\n  padding: 1.5%;\n  border-radius: 20px;\n  border: 1px solid #ccc;\n  box-shadow: 2px 2px 10px #ccc;\n  background: #fff;\n  box-sizing: border-box;\n}\n\nsection[_ngcontent-%COMP%]   article[_ngcontent-%COMP%] {\n  float: left;\n  width: 46%;\n  height: 650px;\n  margin: 1% 2%;\n  padding: 2%;\n  border-radius: 20px;\n  border: 1px solid #ccc;\n  box-shadow: 2px 2px 10px #ccc;\n  background: #fff;\n  box-sizing: border-box;\n}\n\nselect[_ngcontent-%COMP%] {\n  font-size: 20px;\n  float: left;\n}\n\n@media only screen and (max-width: 700px) {\n  header[_ngcontent-%COMP%], footer[_ngcontent-%COMP%] {\n    float: left;\n    width: 96%;\n    margin: 0.5% 2%;\n  }\n  header[_ngcontent-%COMP%]   h1[_ngcontent-%COMP%], footer[_ngcontent-%COMP%]   h1[_ngcontent-%COMP%] {\n    float: left;\n    width: 100%;\n  }\n  header[_ngcontent-%COMP%]   .area1[_ngcontent-%COMP%], footer[_ngcontent-%COMP%]   .area1[_ngcontent-%COMP%] {\n    float: left;\n    width: 100%;\n    text-align: left;\n  }\n  header[_ngcontent-%COMP%]   .area2[_ngcontent-%COMP%], footer[_ngcontent-%COMP%]   .area2[_ngcontent-%COMP%] {\n    float: left;\n    width: 100%;\n    text-align: left;\n  }\n\n  select[_ngcontent-%COMP%] {\n    font-size: 16px;\n    float: left;\n  }\n\n  section[_ngcontent-%COMP%] {\n    float: left;\n    width: 100%;\n  }\n  section[_ngcontent-%COMP%]   article[_ngcontent-%COMP%] {\n    float: left;\n    width: 96%;\n    height: 750px;\n  }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9hdHJlbGl6L0Rlc2t0b3AvY292aWQxOS9jb3ZpZC1hcHAvc3JjL2FwcC9jb21wb25lbnRzL2NjYWFjaGFydC9jY2FhY2hhcnQuY29tcG9uZW50LnNjc3MiLCJzcmMvYXBwL2NvbXBvbmVudHMvY2NhYWNoYXJ0L2NjYWFjaGFydC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFDQTtFQUNNLGlCQUFBO0VBQ0Esa0JBQUE7QUNBTjs7QURHQTtFQUNNLFdBQUE7RUFDQSxVQUFBO0VBQ0EsZUFBQTtBQ0FOOztBRENNO0VBQUksY0FBQTtFQUFlLGNBQUE7RUFBZ0IseUJBQUE7QUNJekM7O0FESE07RUFBSSxXQUFBO0VBQVksVUFBQTtBQ090Qjs7QUROTTtFQUFRLFdBQUE7RUFBWSxVQUFBO0VBQVcsZ0JBQUE7QUNXckM7O0FEVk07RUFBUSxlQUFBO0VBQWdCLFlBQUE7RUFBYSxVQUFBO0VBQVcsaUJBQUE7QUNnQnREOztBRGJBO0VBQ00sZ0JBQUE7QUNnQk47O0FEYkE7RUFDTSxXQUFBO0VBQ0EsV0FBQTtBQ2dCTjs7QURmTTtFQUNNLHFCQUFBO0VBQ0EsV0FBQTtFQUNBLFVBQUE7RUFDQSxhQUFBO0VBQ0EsV0FBQTtBQ2lCWjs7QURmWTtFQUNNLFdBQUE7RUFDQSxZQUFBO0VBQ0EsV0FBQTtFQUNBLFVBQUE7RUFDQSw0QkFBQTtFQUNBLGtCQUFBO0VBQ0EsbUJBQUE7RUFDQSxzQkFBQTtFQUNBLGdCQUFBO0FDaUJsQjs7QURoQmtCO0VBQ00sZUFBQTtFQUNBLGNBQUE7QUNrQnhCOztBRGJZO0VBQ00sV0FBQTtFQUNBLFVBQUE7RUFDQSxhQUFBO0VBQ0EsZUFBQTtFQUNBLGFBQUE7RUFDQSxtQkFBQTtFQUNBLHNCQUFBO0VBQ0EsNkJBQUE7RUFDQSxnQkFBQTtFQUVBLHNCQUFBO0FDY2xCOztBRFZNO0VBQ00sV0FBQTtFQUNBLFVBQUE7RUFDQSxhQUFBO0VBQ0EsYUFBQTtFQUNBLFdBQUE7RUFDQSxtQkFBQTtFQUNBLHNCQUFBO0VBQ0EsNkJBQUE7RUFDQSxnQkFBQTtFQUVBLHNCQUFBO0FDV1o7O0FEUEE7RUFDTSxlQUFBO0VBQ0EsV0FBQTtBQ1VOOztBRFBBO0VBQ007SUFDTSxXQUFBO0lBQ0EsVUFBQTtJQUNBLGVBQUE7RUNVVjtFRFRVO0lBQUksV0FBQTtJQUFZLFdBQUE7RUNhMUI7RURaVTtJQUFRLFdBQUE7SUFBWSxXQUFBO0lBQVksZ0JBQUE7RUNpQjFDO0VEaEJVO0lBQVEsV0FBQTtJQUFZLFdBQUE7SUFBWSxnQkFBQTtFQ3FCMUM7O0VEbkJJO0lBQ00sZUFBQTtJQUNBLFdBQUE7RUNzQlY7O0VEcEJJO0lBQ00sV0FBQTtJQUNBLFdBQUE7RUN1QlY7RUR0QlU7SUFDTSxXQUFBO0lBQ0EsVUFBQTtJQUNBLGFBQUE7RUN3QmhCO0FBQ0YiLCJmaWxlIjoic3JjL2FwcC9jb21wb25lbnRzL2NjYWFjaGFydC9jY2FhY2hhcnQuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJcbi50eHRyaWdodHtcbiAgICAgIHRleHQtYWxpZ246cmlnaHQ7XG4gICAgICBtYXJnaW4tYm90dG9tOiAwcHg7XG59XG5cbmhlYWRlcixmb290ZXJ7XG4gICAgICBmbG9hdDogbGVmdDtcbiAgICAgIHdpZHRoOiA5NiU7XG4gICAgICBtYXJnaW46IC41JSAyJTtcbiAgICAgIGgxeyBjb2xvcjojMWY3N2I0OyBmb250LXNpemU6IDJlbTsgdGV4dC10cmFuc2Zvcm06IHVwcGVyY2FzZTt9XG4gICAgICBoMnsgZmxvYXQ6bGVmdDsgd2lkdGg6NTAlOyB9XG4gICAgICAuYXJlYTF7IGZsb2F0OmxlZnQ7IHdpZHRoOjQ4JTsgdGV4dC1hbGlnbjpsZWZ0O31cbiAgICAgIC5hcmVhMnsgbWFyZ2luLWxlZnQ6MiU7IGZsb2F0OnJpZ2h0OyB3aWR0aDo1MCU7IHRleHQtYWxpZ246cmlnaHQ7fVxufVxuXG5oZWFkZXJ7XG4gICAgICBtYXJnaW4tdG9wOjUwcHg7XG59XG5cbnNlY3Rpb257XG4gICAgICBmbG9hdDogbGVmdDtcbiAgICAgIHdpZHRoOiAxMDAlO1xuICAgICAgLmtwaXN7XG4gICAgICAgICAgICBsaXN0LXN0eWxlLXR5cGU6IG5vbmU7XG4gICAgICAgICAgICBmbG9hdDogbGVmdDtcbiAgICAgICAgICAgIHdpZHRoOiA5NiU7XG4gICAgICAgICAgICBtYXJnaW46IDAlIDIlO1xuICAgICAgICAgICAgcGFkZGluZzogMCU7XG5cbiAgICAgICAgICAgIGxpe1xuICAgICAgICAgICAgICAgICAgZmxvYXQ6IGxlZnQ7XG4gICAgICAgICAgICAgICAgICB3aWR0aDogMTQuNiU7XG4gICAgICAgICAgICAgICAgICBwYWRkaW5nOiAxJTtcbiAgICAgICAgICAgICAgICAgIG1hcmdpbjogMSU7XG4gICAgICAgICAgICAgICAgICBib3gtc2hhZG93OiAwcHggMHB4IDJweCAjY2NjO1xuICAgICAgICAgICAgICAgICAgdGV4dC1hbGlnbjogY2VudGVyO1xuICAgICAgICAgICAgICAgICAgYm9yZGVyLXJhZGl1czogMjBweDtcbiAgICAgICAgICAgICAgICAgIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XG4gICAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kOiAjZmZmO1xuICAgICAgICAgICAgICAgICAgLm51bWJlcntcbiAgICAgICAgICAgICAgICAgICAgICAgIGZvbnQtc2l6ZToyNXB4O1xuICAgICAgICAgICAgICAgICAgICAgICAgY29sb3I6IHJnYigzMSwgMTE5LCAxODApO1xuICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfVxuICAgICAgfVxuICAgICAgJi50cmlzZWN0aW9ue1xuICAgICAgICAgICAgYXJ0aWNsZXtcbiAgICAgICAgICAgICAgICAgIGZsb2F0OiBsZWZ0O1xuICAgICAgICAgICAgICAgICAgd2lkdGg6IDMwJTtcbiAgICAgICAgICAgICAgICAgIGhlaWdodDogNTUwcHg7XG4gICAgICAgICAgICAgICAgICBtYXJnaW46IDElIDEuNSU7XG4gICAgICAgICAgICAgICAgICBwYWRkaW5nOiAxLjUlO1xuICAgICAgICAgICAgICAgICAgYm9yZGVyLXJhZGl1czogMjBweDtcbiAgICAgICAgICAgICAgICAgIGJvcmRlcjogMXB4IHNvbGlkICNjY2M7XG4gICAgICAgICAgICAgICAgICBib3gtc2hhZG93OiAycHggMnB4IDEwcHggI2NjYztcbiAgICAgICAgICAgICAgICAgIGJhY2tncm91bmQ6ICNmZmY7XG5cbiAgICAgICAgICAgICAgICAgIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XG4gICAgICAgICAgICB9XG5cbiAgICAgIH1cbiAgICAgIGFydGljbGV7XG4gICAgICAgICAgICBmbG9hdDogbGVmdDtcbiAgICAgICAgICAgIHdpZHRoOiA0NiU7XG4gICAgICAgICAgICBoZWlnaHQ6IDY1MHB4O1xuICAgICAgICAgICAgbWFyZ2luOiAxJSAyJTtcbiAgICAgICAgICAgIHBhZGRpbmc6IDIlO1xuICAgICAgICAgICAgYm9yZGVyLXJhZGl1czogMjBweDtcbiAgICAgICAgICAgIGJvcmRlcjogMXB4IHNvbGlkICNjY2M7XG4gICAgICAgICAgICBib3gtc2hhZG93OiAycHggMnB4IDEwcHggI2NjYztcbiAgICAgICAgICAgIGJhY2tncm91bmQ6ICNmZmY7XG5cbiAgICAgICAgICAgIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XG4gICAgICB9XG59XG5cbnNlbGVjdHtcbiAgICAgIGZvbnQtc2l6ZTogMjBweDtcbiAgICAgIGZsb2F0OiBsZWZ0O1xufVxuXG5AbWVkaWEgb25seSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDcwMHB4KSB7XG4gICAgICBoZWFkZXIsZm9vdGVye1xuICAgICAgICAgICAgZmxvYXQ6IGxlZnQ7XG4gICAgICAgICAgICB3aWR0aDogOTYlO1xuICAgICAgICAgICAgbWFyZ2luOiAuNSUgMiU7XG4gICAgICAgICAgICBoMXsgZmxvYXQ6bGVmdDsgd2lkdGg6MTAwJTsgfVxuICAgICAgICAgICAgLmFyZWExeyBmbG9hdDpsZWZ0OyB3aWR0aDoxMDAlOyB0ZXh0LWFsaWduOmxlZnQ7fVxuICAgICAgICAgICAgLmFyZWEyeyBmbG9hdDpsZWZ0OyB3aWR0aDoxMDAlOyB0ZXh0LWFsaWduOmxlZnQ7fVxuICAgICAgfVxuICAgICAgc2VsZWN0e1xuICAgICAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICAgICAgZmxvYXQ6IGxlZnQ7XG4gICAgICB9XG4gICAgICBzZWN0aW9ue1xuICAgICAgICAgICAgZmxvYXQ6IGxlZnQ7XG4gICAgICAgICAgICB3aWR0aDogMTAwJTtcbiAgICAgICAgICAgIGFydGljbGV7XG4gICAgICAgICAgICAgICAgICBmbG9hdDogbGVmdDtcbiAgICAgICAgICAgICAgICAgIHdpZHRoOiA5NiU7XG4gICAgICAgICAgICAgICAgICBoZWlnaHQ6IDc1MHB4O1xuICAgICAgICAgICAgfVxuICAgICAgfVxuXG59IiwiLnR4dHJpZ2h0IHtcbiAgdGV4dC1hbGlnbjogcmlnaHQ7XG4gIG1hcmdpbi1ib3R0b206IDBweDtcbn1cblxuaGVhZGVyLCBmb290ZXIge1xuICBmbG9hdDogbGVmdDtcbiAgd2lkdGg6IDk2JTtcbiAgbWFyZ2luOiAwLjUlIDIlO1xufVxuaGVhZGVyIGgxLCBmb290ZXIgaDEge1xuICBjb2xvcjogIzFmNzdiNDtcbiAgZm9udC1zaXplOiAyZW07XG4gIHRleHQtdHJhbnNmb3JtOiB1cHBlcmNhc2U7XG59XG5oZWFkZXIgaDIsIGZvb3RlciBoMiB7XG4gIGZsb2F0OiBsZWZ0O1xuICB3aWR0aDogNTAlO1xufVxuaGVhZGVyIC5hcmVhMSwgZm9vdGVyIC5hcmVhMSB7XG4gIGZsb2F0OiBsZWZ0O1xuICB3aWR0aDogNDglO1xuICB0ZXh0LWFsaWduOiBsZWZ0O1xufVxuaGVhZGVyIC5hcmVhMiwgZm9vdGVyIC5hcmVhMiB7XG4gIG1hcmdpbi1sZWZ0OiAyJTtcbiAgZmxvYXQ6IHJpZ2h0O1xuICB3aWR0aDogNTAlO1xuICB0ZXh0LWFsaWduOiByaWdodDtcbn1cblxuaGVhZGVyIHtcbiAgbWFyZ2luLXRvcDogNTBweDtcbn1cblxuc2VjdGlvbiB7XG4gIGZsb2F0OiBsZWZ0O1xuICB3aWR0aDogMTAwJTtcbn1cbnNlY3Rpb24gLmtwaXMge1xuICBsaXN0LXN0eWxlLXR5cGU6IG5vbmU7XG4gIGZsb2F0OiBsZWZ0O1xuICB3aWR0aDogOTYlO1xuICBtYXJnaW46IDAlIDIlO1xuICBwYWRkaW5nOiAwJTtcbn1cbnNlY3Rpb24gLmtwaXMgbGkge1xuICBmbG9hdDogbGVmdDtcbiAgd2lkdGg6IDE0LjYlO1xuICBwYWRkaW5nOiAxJTtcbiAgbWFyZ2luOiAxJTtcbiAgYm94LXNoYWRvdzogMHB4IDBweCAycHggI2NjYztcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuICBib3JkZXItcmFkaXVzOiAyMHB4O1xuICBib3gtc2l6aW5nOiBib3JkZXItYm94O1xuICBiYWNrZ3JvdW5kOiAjZmZmO1xufVxuc2VjdGlvbiAua3BpcyBsaSAubnVtYmVyIHtcbiAgZm9udC1zaXplOiAyNXB4O1xuICBjb2xvcjogIzFmNzdiNDtcbn1cbnNlY3Rpb24udHJpc2VjdGlvbiBhcnRpY2xlIHtcbiAgZmxvYXQ6IGxlZnQ7XG4gIHdpZHRoOiAzMCU7XG4gIGhlaWdodDogNTUwcHg7XG4gIG1hcmdpbjogMSUgMS41JTtcbiAgcGFkZGluZzogMS41JTtcbiAgYm9yZGVyLXJhZGl1czogMjBweDtcbiAgYm9yZGVyOiAxcHggc29saWQgI2NjYztcbiAgYm94LXNoYWRvdzogMnB4IDJweCAxMHB4ICNjY2M7XG4gIGJhY2tncm91bmQ6ICNmZmY7XG4gIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XG59XG5zZWN0aW9uIGFydGljbGUge1xuICBmbG9hdDogbGVmdDtcbiAgd2lkdGg6IDQ2JTtcbiAgaGVpZ2h0OiA2NTBweDtcbiAgbWFyZ2luOiAxJSAyJTtcbiAgcGFkZGluZzogMiU7XG4gIGJvcmRlci1yYWRpdXM6IDIwcHg7XG4gIGJvcmRlcjogMXB4IHNvbGlkICNjY2M7XG4gIGJveC1zaGFkb3c6IDJweCAycHggMTBweCAjY2NjO1xuICBiYWNrZ3JvdW5kOiAjZmZmO1xuICBib3gtc2l6aW5nOiBib3JkZXItYm94O1xufVxuXG5zZWxlY3Qge1xuICBmb250LXNpemU6IDIwcHg7XG4gIGZsb2F0OiBsZWZ0O1xufVxuXG5AbWVkaWEgb25seSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDcwMHB4KSB7XG4gIGhlYWRlciwgZm9vdGVyIHtcbiAgICBmbG9hdDogbGVmdDtcbiAgICB3aWR0aDogOTYlO1xuICAgIG1hcmdpbjogMC41JSAyJTtcbiAgfVxuICBoZWFkZXIgaDEsIGZvb3RlciBoMSB7XG4gICAgZmxvYXQ6IGxlZnQ7XG4gICAgd2lkdGg6IDEwMCU7XG4gIH1cbiAgaGVhZGVyIC5hcmVhMSwgZm9vdGVyIC5hcmVhMSB7XG4gICAgZmxvYXQ6IGxlZnQ7XG4gICAgd2lkdGg6IDEwMCU7XG4gICAgdGV4dC1hbGlnbjogbGVmdDtcbiAgfVxuICBoZWFkZXIgLmFyZWEyLCBmb290ZXIgLmFyZWEyIHtcbiAgICBmbG9hdDogbGVmdDtcbiAgICB3aWR0aDogMTAwJTtcbiAgICB0ZXh0LWFsaWduOiBsZWZ0O1xuICB9XG5cbiAgc2VsZWN0IHtcbiAgICBmb250LXNpemU6IDE2cHg7XG4gICAgZmxvYXQ6IGxlZnQ7XG4gIH1cblxuICBzZWN0aW9uIHtcbiAgICBmbG9hdDogbGVmdDtcbiAgICB3aWR0aDogMTAwJTtcbiAgfVxuICBzZWN0aW9uIGFydGljbGUge1xuICAgIGZsb2F0OiBsZWZ0O1xuICAgIHdpZHRoOiA5NiU7XG4gICAgaGVpZ2h0OiA3NTBweDtcbiAgfVxufSJdfQ== */"]
+      styles: [".txtright[_ngcontent-%COMP%] {\n  text-align: right;\n  margin-bottom: 0px;\n}\n\n.lastp[_ngcontent-%COMP%] {\n  margin-bottom: 0px;\n}\n\nheader[_ngcontent-%COMP%] {\n  float: left;\n  width: 96%;\n  margin: 0.5% 2%;\n}\n\nheader[_ngcontent-%COMP%]   h1[_ngcontent-%COMP%] {\n  color: #1f77b4;\n  font-size: 2em;\n  text-transform: uppercase;\n}\n\nheader[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n  float: left;\n  width: 50%;\n}\n\nheader[_ngcontent-%COMP%]   .area1[_ngcontent-%COMP%] {\n  float: left;\n  width: 48%;\n  text-align: left;\n}\n\nheader[_ngcontent-%COMP%]   .area2[_ngcontent-%COMP%] {\n  margin-left: 2%;\n  float: right;\n  width: 50%;\n  text-align: right;\n}\n\nfooter[_ngcontent-%COMP%] {\n  float: left;\n  width: 80%;\n  padding: 2% 10%;\n  border-top: 3px solid grey;\n}\n\nheader[_ngcontent-%COMP%] {\n  margin-top: 50px;\n}\n\nsection[_ngcontent-%COMP%] {\n  float: left;\n  width: 100%;\n}\n\nsection[_ngcontent-%COMP%]   .kpis[_ngcontent-%COMP%] {\n  list-style-type: none;\n  float: left;\n  width: 46%;\n  margin: 0% 2%;\n  padding: 0% 2%;\n  box-sizing: border-box;\n}\n\nsection[_ngcontent-%COMP%]   .kpis[_ngcontent-%COMP%]   li[_ngcontent-%COMP%] {\n  height: 149px;\n  float: left;\n  width: 40%;\n  padding: 23px 2%;\n  margin: 13px 5%;\n  box-shadow: 0px 0px 2px #ccc;\n  text-align: center;\n  border-radius: 20px;\n  background: #fff;\n  box-sizing: border-box;\n}\n\nsection[_ngcontent-%COMP%]   .kpis[_ngcontent-%COMP%]   li[_ngcontent-%COMP%]   .number[_ngcontent-%COMP%] {\n  font-size: 25px;\n  color: #1f77b4;\n}\n\nsection[_ngcontent-%COMP%]   .pie[_ngcontent-%COMP%] {\n  float: left;\n  width: 46%;\n  height: 500px;\n  margin: 1% 2%;\n  padding: 2%;\n  box-sizing: border-box;\n}\n\nsection.trisection[_ngcontent-%COMP%]   article[_ngcontent-%COMP%] {\n  float: left;\n  width: 30%;\n  height: 550px;\n  margin: 1% 1.5%;\n  padding: 1.5%;\n  border-radius: 20px;\n  border: 1px solid #ccc;\n  box-shadow: 2px 2px 10px #ccc;\n  background: #fff;\n  box-sizing: border-box;\n}\n\nsection[_ngcontent-%COMP%]   article[_ngcontent-%COMP%] {\n  float: left;\n  width: 46%;\n  height: 650px;\n  margin: 1% 2%;\n  padding: 2%;\n  border-radius: 20px;\n  border: 1px solid #ccc;\n  box-shadow: 2px 2px 10px #ccc;\n  background: #fff;\n  box-sizing: border-box;\n}\n\nselect[_ngcontent-%COMP%] {\n  font-size: 20px;\n  float: left;\n}\n\n.material-icons[_ngcontent-%COMP%] {\n  font-size: 35px;\n}\n\n@media only screen and (max-width: 700px) {\n  header[_ngcontent-%COMP%] {\n    float: left;\n    width: 96%;\n    margin: 0.5% 2%;\n  }\n  header[_ngcontent-%COMP%]   h1[_ngcontent-%COMP%], header[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n    float: left;\n    width: 96%;\n    margin: 2%;\n  }\n  header[_ngcontent-%COMP%]   .area1[_ngcontent-%COMP%] {\n    float: left;\n    width: 100%;\n    text-align: left;\n  }\n  header[_ngcontent-%COMP%]   .area2[_ngcontent-%COMP%] {\n    float: left;\n    width: 100%;\n    text-align: left;\n  }\n\n  footer[_ngcontent-%COMP%] {\n    float: left;\n    width: 80%;\n    padding: 2% 10%;\n    border-top: 3px solid grey;\n    margin-top: 5%;\n  }\n\n  select[_ngcontent-%COMP%] {\n    border: 1px;\n    float: left;\n  }\n\n  section[_ngcontent-%COMP%]   .kpis[_ngcontent-%COMP%], section[_ngcontent-%COMP%]   .pie[_ngcontent-%COMP%] {\n    margin-top: 5%;\n    float: left;\n    width: 96%;\n    margin: 2% li;\n    margin-width: 48%;\n  }\n\n  section[_ngcontent-%COMP%] {\n    float: left;\n    width: 100%;\n  }\n  section[_ngcontent-%COMP%]   article[_ngcontent-%COMP%] {\n    float: left;\n    width: 96%;\n    height: 750px;\n  }\n\n  section.trisection[_ngcontent-%COMP%] {\n    float: left;\n    width: 100%;\n  }\n  section.trisection[_ngcontent-%COMP%]   article[_ngcontent-%COMP%] {\n    float: left;\n    width: 96%;\n    height: 550px;\n  }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9hdHJlbGl6L0Rlc2t0b3AvY292aWQxOS9jb3ZpZC1hcHAvc3JjL2FwcC9jb21wb25lbnRzL2NjYWFjaGFydC9jY2FhY2hhcnQuY29tcG9uZW50LnNjc3MiLCJzcmMvYXBwL2NvbXBvbmVudHMvY2NhYWNoYXJ0L2NjYWFjaGFydC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFDQTtFQUNNLGlCQUFBO0VBQ0Esa0JBQUE7QUNBTjs7QURFQTtFQUNNLGtCQUFBO0FDQ047O0FERUE7RUFDTSxXQUFBO0VBQ0EsVUFBQTtFQUNBLGVBQUE7QUNDTjs7QURBTTtFQUFJLGNBQUE7RUFBZSxjQUFBO0VBQWdCLHlCQUFBO0FDS3pDOztBREpNO0VBQUksV0FBQTtFQUFZLFVBQUE7QUNRdEI7O0FEUE07RUFBUSxXQUFBO0VBQVksVUFBQTtFQUFXLGdCQUFBO0FDWXJDOztBRFhNO0VBQVEsZUFBQTtFQUFnQixZQUFBO0VBQWEsVUFBQTtFQUFXLGlCQUFBO0FDaUJ0RDs7QURmQTtFQUNNLFdBQUE7RUFDQSxVQUFBO0VBQ0EsZUFBQTtFQUNBLDBCQUFBO0FDa0JOOztBRGZBO0VBQ00sZ0JBQUE7QUNrQk47O0FEZkE7RUFDTSxXQUFBO0VBQ0EsV0FBQTtBQ2tCTjs7QURqQk07RUFDTSxxQkFBQTtFQUNBLFdBQUE7RUFDQSxVQUFBO0VBQ0EsYUFBQTtFQUNBLGNBQUE7RUFDQSxzQkFBQTtBQ21CWjs7QURqQlk7RUFDTSxhQUFBO0VBQ0EsV0FBQTtFQUNBLFVBQUE7RUFDQSxnQkFBQTtFQUNBLGVBQUE7RUFDQSw0QkFBQTtFQUNBLGtCQUFBO0VBQ0EsbUJBQUE7RUFDQSxnQkFBQTtFQUVBLHNCQUFBO0FDa0JsQjs7QURoQmtCO0VBQ00sZUFBQTtFQUNBLGNBQUE7QUNrQnhCOztBRGRNO0VBQ00sV0FBQTtFQUNBLFVBQUE7RUFDQSxhQUFBO0VBQ0EsYUFBQTtFQUNBLFdBQUE7RUFDQSxzQkFBQTtBQ2dCWjs7QURaWTtFQUNNLFdBQUE7RUFDQSxVQUFBO0VBQ0EsYUFBQTtFQUNBLGVBQUE7RUFDQSxhQUFBO0VBQ0EsbUJBQUE7RUFDQSxzQkFBQTtFQUNBLDZCQUFBO0VBQ0EsZ0JBQUE7RUFFQSxzQkFBQTtBQ2FsQjs7QURUTTtFQUNNLFdBQUE7RUFDQSxVQUFBO0VBQ0EsYUFBQTtFQUNBLGFBQUE7RUFDQSxXQUFBO0VBQ0EsbUJBQUE7RUFDQSxzQkFBQTtFQUNBLDZCQUFBO0VBQ0EsZ0JBQUE7RUFFQSxzQkFBQTtBQ1VaOztBRE5BO0VBQ00sZUFBQTtFQUNBLFdBQUE7QUNTTjs7QUROQTtFQUNNLGVBQUE7QUNTTjs7QUROQTtFQUNNO0lBQ00sV0FBQTtJQUNBLFVBQUE7SUFDQSxlQUFBO0VDU1Y7RURSVTtJQUFPLFdBQUE7SUFBWSxVQUFBO0lBQVcsVUFBQTtFQ2F4QztFRFpVO0lBQVEsV0FBQTtJQUFZLFdBQUE7SUFBWSxnQkFBQTtFQ2lCMUM7RURoQlU7SUFBUSxXQUFBO0lBQVksV0FBQTtJQUFZLGdCQUFBO0VDcUIxQzs7RURsQkk7SUFDTSxXQUFBO0lBQ0EsVUFBQTtJQUNBLGVBQUE7SUFDQSwwQkFBQTtJQUNBLGNBQUE7RUNxQlY7O0VEbkJJO0lBQ00sV0FBQTtJQUNBLFdBQUE7RUNzQlY7O0VEbkJJO0lBQ00sY0FBQTtJQUNNLFdBQUE7SUFDQSxVQUFBO0lBQ0EsYUFBQTtJQUVBLGlCQUFBO0VDcUJoQjs7RURoQkk7SUFDTSxXQUFBO0lBQ0EsV0FBQTtFQ21CVjtFRGxCVTtJQUNNLFdBQUE7SUFDQSxVQUFBO0lBQ0EsYUFBQTtFQ29CaEI7O0VEaEJJO0lBQ00sV0FBQTtJQUNBLFdBQUE7RUNtQlY7RURsQlU7SUFDTSxXQUFBO0lBQ0EsVUFBQTtJQUNBLGFBQUE7RUNvQmhCO0FBQ0YiLCJmaWxlIjoic3JjL2FwcC9jb21wb25lbnRzL2NjYWFjaGFydC9jY2FhY2hhcnQuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJcbi50eHRyaWdodHtcbiAgICAgIHRleHQtYWxpZ246cmlnaHQ7XG4gICAgICBtYXJnaW4tYm90dG9tOiAwcHg7XG59XG4ubGFzdHB7XG4gICAgICBtYXJnaW4tYm90dG9tOjBweDtcbn1cblxuaGVhZGVye1xuICAgICAgZmxvYXQ6IGxlZnQ7XG4gICAgICB3aWR0aDogOTYlO1xuICAgICAgbWFyZ2luOiAuNSUgMiU7XG4gICAgICBoMXsgY29sb3I6IzFmNzdiNDsgZm9udC1zaXplOiAyZW07IHRleHQtdHJhbnNmb3JtOiB1cHBlcmNhc2U7fVxuICAgICAgaDJ7IGZsb2F0OmxlZnQ7IHdpZHRoOjUwJTsgfVxuICAgICAgLmFyZWExeyBmbG9hdDpsZWZ0OyB3aWR0aDo0OCU7IHRleHQtYWxpZ246bGVmdDt9XG4gICAgICAuYXJlYTJ7IG1hcmdpbi1sZWZ0OjIlOyBmbG9hdDpyaWdodDsgd2lkdGg6NTAlOyB0ZXh0LWFsaWduOnJpZ2h0O31cbn1cbmZvb3RlcntcbiAgICAgIGZsb2F0OiBsZWZ0O1xuICAgICAgd2lkdGg6IDgwJTtcbiAgICAgIHBhZGRpbmc6IDIlIDEwJTtcbiAgICAgIGJvcmRlci10b3A6M3B4IHNvbGlkIGdyZXk7XG59XG5cbmhlYWRlcntcbiAgICAgIG1hcmdpbi10b3A6NTBweDtcbn1cblxuc2VjdGlvbntcbiAgICAgIGZsb2F0OiBsZWZ0O1xuICAgICAgd2lkdGg6IDEwMCU7XG4gICAgICAua3Bpc3tcbiAgICAgICAgICAgIGxpc3Qtc3R5bGUtdHlwZTogbm9uZTtcbiAgICAgICAgICAgIGZsb2F0OiBsZWZ0O1xuICAgICAgICAgICAgd2lkdGg6IDQ2JTtcbiAgICAgICAgICAgIG1hcmdpbjogMCUgMiU7XG4gICAgICAgICAgICBwYWRkaW5nOiAwJSAyJTtcbiAgICAgICAgICAgIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XG5cbiAgICAgICAgICAgIGxpe1xuICAgICAgICAgICAgICAgICAgaGVpZ2h0OiAxNDlweDtcbiAgICAgICAgICAgICAgICAgIGZsb2F0OiBsZWZ0O1xuICAgICAgICAgICAgICAgICAgd2lkdGg6IDQwJTtcbiAgICAgICAgICAgICAgICAgIHBhZGRpbmc6IDIzcHggMiU7XG4gICAgICAgICAgICAgICAgICBtYXJnaW46IDEzcHggNSU7XG4gICAgICAgICAgICAgICAgICBib3gtc2hhZG93OiAwcHggMHB4IDJweCAjY2NjO1xuICAgICAgICAgICAgICAgICAgdGV4dC1hbGlnbjogY2VudGVyO1xuICAgICAgICAgICAgICAgICAgYm9yZGVyLXJhZGl1czogMjBweDtcbiAgICAgICAgICAgICAgICAgIGJhY2tncm91bmQ6ICNmZmY7XG5cbiAgICAgICAgICAgICAgICAgIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XG4gICAgICAgICAgICAgICAgICBcbiAgICAgICAgICAgICAgICAgIC5udW1iZXJ7XG4gICAgICAgICAgICAgICAgICAgICAgICBmb250LXNpemU6MjVweDtcbiAgICAgICAgICAgICAgICAgICAgICAgIGNvbG9yOiByZ2IoMzEsIDExOSwgMTgwKTtcbiAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgIH1cbiAgICAgIH1cbiAgICAgIC5waWV7XG4gICAgICAgICAgICBmbG9hdDogbGVmdDtcbiAgICAgICAgICAgIHdpZHRoOiA0NiU7XG4gICAgICAgICAgICBoZWlnaHQ6IDUwMHB4O1xuICAgICAgICAgICAgbWFyZ2luOiAxJSAyJTtcbiAgICAgICAgICAgIHBhZGRpbmc6IDIlO1xuICAgICAgICAgICAgYm94LXNpemluZzogYm9yZGVyLWJveDtcbiAgICAgIH1cblxuICAgICAgJi50cmlzZWN0aW9ue1xuICAgICAgICAgICAgYXJ0aWNsZXtcbiAgICAgICAgICAgICAgICAgIGZsb2F0OiBsZWZ0O1xuICAgICAgICAgICAgICAgICAgd2lkdGg6IDMwJTtcbiAgICAgICAgICAgICAgICAgIGhlaWdodDogNTUwcHg7XG4gICAgICAgICAgICAgICAgICBtYXJnaW46IDElIDEuNSU7XG4gICAgICAgICAgICAgICAgICBwYWRkaW5nOiAxLjUlO1xuICAgICAgICAgICAgICAgICAgYm9yZGVyLXJhZGl1czogMjBweDtcbiAgICAgICAgICAgICAgICAgIGJvcmRlcjogMXB4IHNvbGlkICNjY2M7XG4gICAgICAgICAgICAgICAgICBib3gtc2hhZG93OiAycHggMnB4IDEwcHggI2NjYztcbiAgICAgICAgICAgICAgICAgIGJhY2tncm91bmQ6ICNmZmY7XG5cbiAgICAgICAgICAgICAgICAgIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XG4gICAgICAgICAgICB9XG5cbiAgICAgIH1cbiAgICAgIGFydGljbGV7XG4gICAgICAgICAgICBmbG9hdDogbGVmdDtcbiAgICAgICAgICAgIHdpZHRoOiA0NiU7XG4gICAgICAgICAgICBoZWlnaHQ6IDY1MHB4O1xuICAgICAgICAgICAgbWFyZ2luOiAxJSAyJTtcbiAgICAgICAgICAgIHBhZGRpbmc6IDIlO1xuICAgICAgICAgICAgYm9yZGVyLXJhZGl1czogMjBweDtcbiAgICAgICAgICAgIGJvcmRlcjogMXB4IHNvbGlkICNjY2M7XG4gICAgICAgICAgICBib3gtc2hhZG93OiAycHggMnB4IDEwcHggI2NjYztcbiAgICAgICAgICAgIGJhY2tncm91bmQ6ICNmZmY7XG5cbiAgICAgICAgICAgIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XG4gICAgICB9XG59XG5cbnNlbGVjdHtcbiAgICAgIGZvbnQtc2l6ZTogMjBweDtcbiAgICAgIGZsb2F0OiBsZWZ0O1xufVxuXG4ubWF0ZXJpYWwtaWNvbnN7XG4gICAgICBmb250LXNpemU6IDM1cHhcbn1cblxuQG1lZGlhIG9ubHkgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiA3MDBweCkge1xuICAgICAgaGVhZGVye1xuICAgICAgICAgICAgZmxvYXQ6IGxlZnQ7XG4gICAgICAgICAgICB3aWR0aDogOTYlO1xuICAgICAgICAgICAgbWFyZ2luOiAuNSUgMiU7XG4gICAgICAgICAgICBoMSxoMnsgZmxvYXQ6bGVmdDsgd2lkdGg6OTYlOyBtYXJnaW46MiUgfVxuICAgICAgICAgICAgLmFyZWExeyBmbG9hdDpsZWZ0OyB3aWR0aDoxMDAlOyB0ZXh0LWFsaWduOmxlZnQ7fVxuICAgICAgICAgICAgLmFyZWEyeyBmbG9hdDpsZWZ0OyB3aWR0aDoxMDAlOyB0ZXh0LWFsaWduOmxlZnQ7fVxuICAgICAgfVxuXG4gICAgICBmb290ZXJ7XG4gICAgICAgICAgICBmbG9hdDogbGVmdDtcbiAgICAgICAgICAgIHdpZHRoOiA4MCU7XG4gICAgICAgICAgICBwYWRkaW5nOiAyJSAxMCU7XG4gICAgICAgICAgICBib3JkZXItdG9wOjNweCBzb2xpZCBncmV5O1xuICAgICAgICAgICAgbWFyZ2luLXRvcDo1JTtcbiAgICAgIH1cbiAgICAgIHNlbGVjdHtcbiAgICAgICAgICAgIGJvcmRlcjoxcHggOyAgICAgICAgICAgXG4gICAgICAgICAgICBmbG9hdDogbGVmdDtcbiAgICAgIH1cblxuICAgICAgc2VjdGlvbiAua3BpcyxzZWN0aW9uIC5waWUge1xuICAgICAgICAgICAgbWFyZ2luLXRvcDo1JTtcbiAgICAgICAgICAgICAgICAgIGZsb2F0OiBsZWZ0O1xuICAgICAgICAgICAgICAgICAgd2lkdGg6IDk2JTtcbiAgICAgICAgICAgICAgICAgIG1hcmdpbjoyJVxuICAgICAgICAgICAgbGl7XG4gICAgICAgICAgICAgICAgICB3aWR0aDogNDglO1xuICAgICAgICAgICAgfVxuICAgICAgfVxuXG5cbiAgICAgIHNlY3Rpb257XG4gICAgICAgICAgICBmbG9hdDogbGVmdDtcbiAgICAgICAgICAgIHdpZHRoOiAxMDAlO1xuICAgICAgICAgICAgYXJ0aWNsZXtcbiAgICAgICAgICAgICAgICAgIGZsb2F0OiBsZWZ0O1xuICAgICAgICAgICAgICAgICAgd2lkdGg6IDk2JTtcbiAgICAgICAgICAgICAgICAgIGhlaWdodDogNzUwcHg7XG4gICAgICAgICAgICB9XG4gICAgICB9XG5cbiAgICAgIHNlY3Rpb24udHJpc2VjdGlvbntcbiAgICAgICAgICAgIGZsb2F0OiBsZWZ0O1xuICAgICAgICAgICAgd2lkdGg6IDEwMCU7XG4gICAgICAgICAgICBhcnRpY2xle1xuICAgICAgICAgICAgICAgICAgZmxvYXQ6IGxlZnQ7XG4gICAgICAgICAgICAgICAgICB3aWR0aDogOTYlO1xuICAgICAgICAgICAgICAgICAgaGVpZ2h0OiA1NTBweDtcbiAgICAgICAgICAgIH1cbiAgICAgIH1cblxufSIsIi50eHRyaWdodCB7XG4gIHRleHQtYWxpZ246IHJpZ2h0O1xuICBtYXJnaW4tYm90dG9tOiAwcHg7XG59XG5cbi5sYXN0cCB7XG4gIG1hcmdpbi1ib3R0b206IDBweDtcbn1cblxuaGVhZGVyIHtcbiAgZmxvYXQ6IGxlZnQ7XG4gIHdpZHRoOiA5NiU7XG4gIG1hcmdpbjogMC41JSAyJTtcbn1cbmhlYWRlciBoMSB7XG4gIGNvbG9yOiAjMWY3N2I0O1xuICBmb250LXNpemU6IDJlbTtcbiAgdGV4dC10cmFuc2Zvcm06IHVwcGVyY2FzZTtcbn1cbmhlYWRlciBoMiB7XG4gIGZsb2F0OiBsZWZ0O1xuICB3aWR0aDogNTAlO1xufVxuaGVhZGVyIC5hcmVhMSB7XG4gIGZsb2F0OiBsZWZ0O1xuICB3aWR0aDogNDglO1xuICB0ZXh0LWFsaWduOiBsZWZ0O1xufVxuaGVhZGVyIC5hcmVhMiB7XG4gIG1hcmdpbi1sZWZ0OiAyJTtcbiAgZmxvYXQ6IHJpZ2h0O1xuICB3aWR0aDogNTAlO1xuICB0ZXh0LWFsaWduOiByaWdodDtcbn1cblxuZm9vdGVyIHtcbiAgZmxvYXQ6IGxlZnQ7XG4gIHdpZHRoOiA4MCU7XG4gIHBhZGRpbmc6IDIlIDEwJTtcbiAgYm9yZGVyLXRvcDogM3B4IHNvbGlkIGdyZXk7XG59XG5cbmhlYWRlciB7XG4gIG1hcmdpbi10b3A6IDUwcHg7XG59XG5cbnNlY3Rpb24ge1xuICBmbG9hdDogbGVmdDtcbiAgd2lkdGg6IDEwMCU7XG59XG5zZWN0aW9uIC5rcGlzIHtcbiAgbGlzdC1zdHlsZS10eXBlOiBub25lO1xuICBmbG9hdDogbGVmdDtcbiAgd2lkdGg6IDQ2JTtcbiAgbWFyZ2luOiAwJSAyJTtcbiAgcGFkZGluZzogMCUgMiU7XG4gIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XG59XG5zZWN0aW9uIC5rcGlzIGxpIHtcbiAgaGVpZ2h0OiAxNDlweDtcbiAgZmxvYXQ6IGxlZnQ7XG4gIHdpZHRoOiA0MCU7XG4gIHBhZGRpbmc6IDIzcHggMiU7XG4gIG1hcmdpbjogMTNweCA1JTtcbiAgYm94LXNoYWRvdzogMHB4IDBweCAycHggI2NjYztcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuICBib3JkZXItcmFkaXVzOiAyMHB4O1xuICBiYWNrZ3JvdW5kOiAjZmZmO1xuICBib3gtc2l6aW5nOiBib3JkZXItYm94O1xufVxuc2VjdGlvbiAua3BpcyBsaSAubnVtYmVyIHtcbiAgZm9udC1zaXplOiAyNXB4O1xuICBjb2xvcjogIzFmNzdiNDtcbn1cbnNlY3Rpb24gLnBpZSB7XG4gIGZsb2F0OiBsZWZ0O1xuICB3aWR0aDogNDYlO1xuICBoZWlnaHQ6IDUwMHB4O1xuICBtYXJnaW46IDElIDIlO1xuICBwYWRkaW5nOiAyJTtcbiAgYm94LXNpemluZzogYm9yZGVyLWJveDtcbn1cbnNlY3Rpb24udHJpc2VjdGlvbiBhcnRpY2xlIHtcbiAgZmxvYXQ6IGxlZnQ7XG4gIHdpZHRoOiAzMCU7XG4gIGhlaWdodDogNTUwcHg7XG4gIG1hcmdpbjogMSUgMS41JTtcbiAgcGFkZGluZzogMS41JTtcbiAgYm9yZGVyLXJhZGl1czogMjBweDtcbiAgYm9yZGVyOiAxcHggc29saWQgI2NjYztcbiAgYm94LXNoYWRvdzogMnB4IDJweCAxMHB4ICNjY2M7XG4gIGJhY2tncm91bmQ6ICNmZmY7XG4gIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XG59XG5zZWN0aW9uIGFydGljbGUge1xuICBmbG9hdDogbGVmdDtcbiAgd2lkdGg6IDQ2JTtcbiAgaGVpZ2h0OiA2NTBweDtcbiAgbWFyZ2luOiAxJSAyJTtcbiAgcGFkZGluZzogMiU7XG4gIGJvcmRlci1yYWRpdXM6IDIwcHg7XG4gIGJvcmRlcjogMXB4IHNvbGlkICNjY2M7XG4gIGJveC1zaGFkb3c6IDJweCAycHggMTBweCAjY2NjO1xuICBiYWNrZ3JvdW5kOiAjZmZmO1xuICBib3gtc2l6aW5nOiBib3JkZXItYm94O1xufVxuXG5zZWxlY3Qge1xuICBmb250LXNpemU6IDIwcHg7XG4gIGZsb2F0OiBsZWZ0O1xufVxuXG4ubWF0ZXJpYWwtaWNvbnMge1xuICBmb250LXNpemU6IDM1cHg7XG59XG5cbkBtZWRpYSBvbmx5IHNjcmVlbiBhbmQgKG1heC13aWR0aDogNzAwcHgpIHtcbiAgaGVhZGVyIHtcbiAgICBmbG9hdDogbGVmdDtcbiAgICB3aWR0aDogOTYlO1xuICAgIG1hcmdpbjogMC41JSAyJTtcbiAgfVxuICBoZWFkZXIgaDEsIGhlYWRlciBoMiB7XG4gICAgZmxvYXQ6IGxlZnQ7XG4gICAgd2lkdGg6IDk2JTtcbiAgICBtYXJnaW46IDIlO1xuICB9XG4gIGhlYWRlciAuYXJlYTEge1xuICAgIGZsb2F0OiBsZWZ0O1xuICAgIHdpZHRoOiAxMDAlO1xuICAgIHRleHQtYWxpZ246IGxlZnQ7XG4gIH1cbiAgaGVhZGVyIC5hcmVhMiB7XG4gICAgZmxvYXQ6IGxlZnQ7XG4gICAgd2lkdGg6IDEwMCU7XG4gICAgdGV4dC1hbGlnbjogbGVmdDtcbiAgfVxuXG4gIGZvb3RlciB7XG4gICAgZmxvYXQ6IGxlZnQ7XG4gICAgd2lkdGg6IDgwJTtcbiAgICBwYWRkaW5nOiAyJSAxMCU7XG4gICAgYm9yZGVyLXRvcDogM3B4IHNvbGlkIGdyZXk7XG4gICAgbWFyZ2luLXRvcDogNSU7XG4gIH1cblxuICBzZWxlY3Qge1xuICAgIGJvcmRlcjogMXB4O1xuICAgIGZsb2F0OiBsZWZ0O1xuICB9XG5cbiAgc2VjdGlvbiAua3Bpcywgc2VjdGlvbiAucGllIHtcbiAgICBtYXJnaW4tdG9wOiA1JTtcbiAgICBmbG9hdDogbGVmdDtcbiAgICB3aWR0aDogOTYlO1xuICAgIG1hcmdpbjogMiUgbGk7XG4gICAgbWFyZ2luLXdpZHRoOiA0OCU7XG4gIH1cblxuICBzZWN0aW9uIHtcbiAgICBmbG9hdDogbGVmdDtcbiAgICB3aWR0aDogMTAwJTtcbiAgfVxuICBzZWN0aW9uIGFydGljbGUge1xuICAgIGZsb2F0OiBsZWZ0O1xuICAgIHdpZHRoOiA5NiU7XG4gICAgaGVpZ2h0OiA3NTBweDtcbiAgfVxuXG4gIHNlY3Rpb24udHJpc2VjdGlvbiB7XG4gICAgZmxvYXQ6IGxlZnQ7XG4gICAgd2lkdGg6IDEwMCU7XG4gIH1cbiAgc2VjdGlvbi50cmlzZWN0aW9uIGFydGljbGUge1xuICAgIGZsb2F0OiBsZWZ0O1xuICAgIHdpZHRoOiA5NiU7XG4gICAgaGVpZ2h0OiA1NTBweDtcbiAgfVxufSJdfQ== */"]
     });
     /*@__PURE__*/
 
@@ -1322,6 +1695,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             "static": true
           }]
         }],
+        GraphE0: [{
+          type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"],
+          args: ["GraphE0", {
+            "static": true
+          }]
+        }],
         GraphE1: [{
           type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"],
           args: ["GraphE1", {
@@ -1337,6 +1716,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         GraphE3: [{
           type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"],
           args: ["GraphE3", {
+            "static": true
+          }]
+        }],
+        GraphE4: [{
+          type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"],
+          args: ["GraphE4", {
+            "static": true
+          }]
+        }],
+        GraphE5: [{
+          type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"],
+          args: ["GraphE5", {
+            "static": true
+          }]
+        }],
+        GraphE6: [{
+          type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewChild"],
+          args: ["GraphE6", {
             "static": true
           }]
         }]

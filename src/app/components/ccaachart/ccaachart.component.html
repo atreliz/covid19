@@ -1,9 +1,6 @@
 
 <header>
-    <h1>Influencia COVID 19 distribuidas por comunidades</h1>
-
-    <p class="txtright"> Fuente de datos oficial: <a href="https://covid19.isciii.es/">https://covid19.isciii.es/</a> </p>
-    <p class="txtright"> Ultima actualización: ({{jsonResumeSpain.Fecha}} - {{jsonResumeSpain.Hora}}h)  </p>
+    <h1  style="margin-bottom:20px">Influencia COVID 19 distribuidas por comunidades</h1>
 </header>
 
 <!-- Spain charts -->
@@ -11,34 +8,57 @@
    <ul class="kpis">
         <li>
             <p class="number">España</p>
-            <p>Resumen</p>
+            <p class="number " style="margin-top:15px">{{jsonResumeSpain.Fecha}}</p>
+            <p class="number lastp" style="margin-top:15px">{{jsonResumeSpain.Hora}}h</p>
+            
+            <!--p><span class="material-icons">poll</span></p-->
         </li>
         <li>
             <p class="number">{{jsonResumeSpain.Casos24h | number}}</p>
-            <p>Ultimas 24H</p>
+            <p><span class="material-icons">query_builder</span></p>
+            <p class="lastp">Ultimas 24H</p>
         </li>
         <li>
             <p class="number">{{jsonResumeSpain.Casos | number}}</p>
-            <p>Total de casos</p>
+            <p><span class="material-icons">add_alarm</span></p>
+            <p class="lastp">Total de casos</p>
         </li>
         <li>
             <p class="number">{{jsonResumeSpain.Defunciones | number}}</p>
-            <p>Total de fallecidos</p>
+            <p><span class="material-icons">cloud</span></p> 
+            <p class="lastp">Total de fallecidos</p>
         </li>
         <li>
             <p class="number">{{jsonResumeSpain.Recuperados | number}}</p>
-            <p>Total de recuperados</p>
+            <p><span class="material-icons">directions_walk</span></p>
+            <p class="lastp">Total de recuperados</p>
         </li>
         <li>
             <p class="number">{{jsonResumeSpain.Hospitalizados | number}}</p>
-            <p>Total de hospitalizados</p>
+            <p><span class="material-icons">local_hotel</span></p>
+            <p class="lastp">Total de hospitalizados</p>             
         </li>
    </ul>
+   
+
+    <article class="pie">
+        <h2 style="margin-bottom:0px">Situación en España con {{jsonResumeSpain.Casos | number}} casos</h2>
+        <div id="GraphE0" #GraphE0></div>
+    </article>
 
 </section>
 
+<!-- Region selector -->
+<header>
+        
+    <div class="area1">
+        <h2>Comunidades: por sus casos totales</h2>
+ 
+    </div>
+</header>
+
 <!-- 3 charts by Regions -->
-<section class="trisection">
+<section class="trisection" >
     <article>
         <h2>Comunidades por casos acumulados</h2>
         <div  id="GraphE1" #GraphE1></div>
@@ -52,6 +72,30 @@
     <article >
         <h2>Comunidades por Inc.14d</h2>
         <div id="GraphE3" #GraphE3></div>
+    </article>
+</section>
+
+<!-- Region selector -->
+<header>
+        <h2>Comunidades: casos por cada 1000 habitantes</h2>
+</header>
+
+
+<!-- 3 charts by Regions -->
+<section class="trisection" >
+    <article>
+        <h2>Comunidades por casos acumulados</h2>
+        <div  id="GraphE4" #GraphE4></div>
+    </article>
+
+    <article >
+        <h2>Comunidades en las ultimas 24H</h2>
+        <div id="GraphE5" #GraphE5></div>
+    </article>
+
+    <article >
+        <h2>Comunidades por Inc.14d</h2>
+        <div id="GraphE6" #GraphE6></div>
     </article>
 </section>
 
@@ -85,8 +129,12 @@
 </section>
 
 <footer>
-    <p><b>NOTA publicada en la fuente de datos:</b> El objetivo de los datos que se publican en esta web es saber el número de casos acumulados a la fecha y que por tanto no se puede deducir que la diferencia entre un día y el anterior es el número de casos nuevos ya que esos casos pueden haber sido recuperados de fechas anteriores Cualquier inferencia que se haga sobre las diferencias de un día para otro deben hacerse con precaución y son únicamente la responsabilidad el autor</p>
-    <p><b>NOTA de este autor:</b> estas gráficas usan los datos oficiales compartidos por el gobierno a la población. Según el rigor con que se han tomado esos datos, las gráficas por días debe tomarse como una aproximación.</p>
-    <p>Made by ATL</p>
+
+    <p class="txtright"> Fuente de datos oficial: <a href="https://covid19.isciii.es/">https://covid19.isciii.es/</a> </p>
+    <p class="txtright" style="margin-bottom:20px"> Ultima actualización: ({{jsonResumeSpain.Fecha}} - {{jsonResumeSpain.Hora}}h)  </p>
+
+    <p><b>**NOTA publicada en la fuente de datos:</b> El objetivo de los datos que se publican en esta web es saber el número de casos acumulados a la fecha y que por tanto no se puede deducir que la diferencia entre un día y el anterior es el número de casos nuevos ya que esos casos pueden haber sido recuperados de fechas anteriores Cualquier inferencia que se haga sobre las diferencias de un día para otro deben hacerse con precaución y son únicamente la responsabilidad el autor</p>
+    <p><b>**NOTA de este autor:</b> estas gráficas usan los datos oficiales compartidos por el gobierno a la población. Según el rigor con que se han tomado esos datos, las gráficas por días debe tomarse como una aproximación.</p>
+    <p> <a href="http://atreliz.com">Made by ATL</a></p>
 </footer>
 
