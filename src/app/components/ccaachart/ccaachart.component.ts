@@ -20,6 +20,8 @@ export class CCAAchartComponent implements OnInit {
     fullData:any;
     myccaadata:any=[];
     jsonResumeSpain:any=[]
+    comunidadSelecccionadaKPIS:any={}
+    fullSpainData:any={}
 
     selectedCCAA: any;
     options:any;
@@ -33,6 +35,11 @@ export class CCAAchartComponent implements OnInit {
 
     @ViewChild("GraphB", { static: true })
     public GraphB: ElementRef; 
+
+    @ViewChild("GraphC", { static: true })
+    public GraphC: ElementRef; 
+
+    
 
     @ViewChild("GraphE0", { static: true })
     public GraphE0: ElementRef; 
@@ -135,7 +142,7 @@ export class CCAAchartComponent implements OnInit {
                     }
                 )
                 .subscribe(data => {
-                    console.log("----CSV ",data);
+                    //console.log("----CSV ",data);
                     this.jsonReadyFull( this.csvToJSON(data) )
                 });
             }
@@ -284,15 +291,15 @@ export class CCAAchartComponent implements OnInit {
                     console.log("----CSV ",data);
                     var  populationCSV = this.csvToJSON(data) 
 
-                    console.log("---populationCSV",populationCSV)
-                    console.log("---data4",data4)
+                    //console.log("---populationCSV",populationCSV)
+                    //console.log("---data4",data4)
                     for (let i = 0; i < data4.ccaa.length; i++) {
         
                         populationCSV.forEach( function(item_B){
                             if(data4.ccaa[i] ===  item_B.CCAA){                                
                                 var relative=(data4.acumulados[i] / item_B.population)*1000
                                 data4.acumulados[i] = relative.toFixed(2);
-                                console.log(data4.ccaa[i], item_B.CCAA, data4.acumulados[i])
+                                //console.log(data4.ccaa[i], item_B.CCAA, data4.acumulados[i])
                             }
                         });
                     };
@@ -303,7 +310,7 @@ export class CCAAchartComponent implements OnInit {
                             if(data5.ccaa[i] ===  item_B.CCAA){                                
                                 var relative=(data5.ultimas[i] / item_B.population)*1000
                                 data5.ultimas[i] = relative.toFixed(2);
-                                console.log(data5.ccaa[i], item_B.CCAA, data5.ultimas[i])
+                                //console.log(data5.ccaa[i], item_B.CCAA, data5.ultimas[i])
                             }
                         });
                     };
@@ -314,7 +321,7 @@ export class CCAAchartComponent implements OnInit {
                             if(data6.ccaa[i] ===  item_B.CCAA){                                
                                 var relative=(data6.incidencia[i] / item_B.population)*1000
                                 data6.incidencia[i] = relative.toFixed(2);
-                                console.log(data6.ccaa[i], item_B.CCAA, data6.incidencia[i])
+                                //console.log(data6.ccaa[i], item_B.CCAA, data6.incidencia[i])
                             }
                         });
                     };
@@ -355,11 +362,17 @@ export class CCAAchartComponent implements OnInit {
             var lines = csv.split("\n");
             var result = [];
             var headers = lines[0].split(",");
+            //console.log("headers",headers)
             for (var i = 1; i < lines.length - 1; i++) {
                 var obj = {};
                 var currentline = lines[i].split(",");
+                //console.log("currentline",headers)
+
                 for (var j = 0; j < headers.length; j++) {
-                    obj[headers[j]] = currentline[j];
+                    var head=headers[j].replace('\r','')
+                    var value = currentline[j].replace('\r','')
+                    obj[head] = value;
+                    //console.log("obj",obj)
                 }
                 result.push(obj);
             }
@@ -392,7 +405,41 @@ export class CCAAchartComponent implements OnInit {
             this.myccaadata = data;
             this.selectedCCAA = "MD";
             this.massageData("MD","create");
+            //this.massageSpainData();
 
+        }
+        massageSpainData(){
+            var data = JSON.parse( JSON.stringify(this.myccaadata) ) 
+            var groupBy = function(xs, key) {
+                return xs.reduce(function(rv, x) {
+                  (rv[x[key]] = rv[x[key]] || []).push(x);
+                  return rv;
+                }, {});
+              };
+              var groupedByDate=[groupBy(data, 'Fecha')]
+              console.log("groupedByDate", groupedByDate.length ,groupedByDate);
+
+              //loop to calculate by Date
+
+              for (var i = 0; i < groupedByDate.length; i++) {
+                var item=groupedByDate[i]
+                var values={
+                    fechas:item.fecha,
+                    casos:0,
+                    hospitalizados:0,
+                    fallecidos:0,
+                    uci:0,
+                    recuperados:0,
+                }
+                console.log(">>>> ",values)
+              }
+
+
+
+
+              //console.log(">>>>",groubedByTeam);
+
+            //this.fullSpainData 
         }
 
         massageData(ccaacode, mode){
@@ -409,6 +456,9 @@ export class CCAAchartComponent implements OnInit {
             this.madridDataFull.hospitalizados = this.madridData.map( (item) => item.Hospitalizados!="" ? item.Hospitalizados:0 );
             this.madridDataFull.uci = this.madridData.map( (item) => item.UCI!="" ? item.UCI:0 );
             this.madridDataFull.fallecidos = this.madridData.map( (item) => item.Fallecidos!="" ? item.Fallecidos:0 );
+            this.madridDataFull.Recuperados = this.madridData.map( (item) => item['Recuperados']!="" ? item['Recuperados']:0 );
+
+            
 
             //calculate Casos por dia
             this.madridDataFull.casosDia = [];
@@ -453,18 +503,33 @@ export class CCAAchartComponent implements OnInit {
                 var resta = siguiente-actual;
                 this.madridDataFull.uciDia.push(resta);
             }
+
+
             
             console.log("this.madridDataFull.",this.madridDataFull)
+
+
+            //set KPIS de la comunidad
+            var size = this.madridDataFull.fechas.length-1;
+            this.comunidadSelecccionadaKPIS = {
+                casos: this.madridDataFull.casos[size],
+                fallecidos: this.madridDataFull.fallecidos[size],
+                hospitalizados: this.madridDataFull.hospitalizados[size],
+                uci: this.madridDataFull.uci[size],
+                recuperados: this.madridDataFull.Recuperados[size]
+            }
 
             //draw charts
             if(mode==="create"){
                 console.log("CREATE")
                 this.plotGraphA();
                 this.plotGraphB();
+                this.plotGraphC();
             }else{
                 console.log("UPDATE")
                 this.plotGraphAUpdate();
                 this.plotGraphBUpdate();
+                this.plotGraphCUpdate();
             }
 
 
@@ -477,6 +542,8 @@ export class CCAAchartComponent implements OnInit {
 
     //--PLOT functions
         plotGraphA(){
+
+
             Plotly.newPlot( 
                 this.GraphA.nativeElement,
                 [
@@ -484,27 +551,27 @@ export class CCAAchartComponent implements OnInit {
                         x: this.madridDataFull.fechas, 
                         y:  this.madridDataFull.casos,
                         mode: 'lines',
-                        name: 'Casos acumulados'
+                        name: 'Casos'
                     },
                     {
                         x: this.madridDataFull.fechas,
                         y:  this.madridDataFull.fallecidos,
                         mode: 'lines',
-                        name: 'Fallecidos acumulados'
+                        name: 'Fallecidos'
                         
                     },
                     {
                         x: this.madridDataFull.fechas,
                         y:  this.madridDataFull.hospitalizados,
                         mode: 'lines',
-                        name: 'Hopitalizados acumulados'
+                        name: 'Hopitalizados'
                         
                     },
                     {
                         x: this.madridDataFull.fechas,
                         y:  this.madridDataFull.uci,
                         mode: 'lines',
-                        name: 'UCI acumulados'
+                        name: 'UCI'
                         
                     }
                 ],
@@ -519,6 +586,8 @@ export class CCAAchartComponent implements OnInit {
         }
 
         plotGraphB(){
+
+
             Plotly.newPlot( 
                 this.GraphB.nativeElement,
                 [
@@ -559,6 +628,32 @@ export class CCAAchartComponent implements OnInit {
                 },
                 {responsive: true, displayModeBar: false});
         }
+
+        plotGraphC(){
+
+            var enfermos =  this.comunidadSelecccionadaKPIS.casos - this.comunidadSelecccionadaKPIS.recuperados - this.comunidadSelecccionadaKPIS.fallecidos;
+
+
+            Plotly.newPlot( 
+                this.GraphC.nativeElement,
+                [
+                    {
+                        values: [enfermos, this.comunidadSelecccionadaKPIS.recuperados, this.comunidadSelecccionadaKPIS.fallecidos],
+                        labels: ['Enfermos', 'Recuperados','Defunciones'],
+                        type: 'pie',
+                        marker: {
+                            colors: ["#ff7f0e", "#2d9f2c", "#1f77b4"]
+                        }
+                    }
+                ],
+                { 
+                    
+                        height:420
+                },
+                {responsive: true, displayModeBar: false});
+        }
+
+        
 
 
 
@@ -638,7 +733,33 @@ export class CCAAchartComponent implements OnInit {
                 },
                 {responsive: true, showEditInChartStudio: false});
         }
+
+        plotGraphCUpdate(){
+            var enfermos =  this.comunidadSelecccionadaKPIS.casos - this.comunidadSelecccionadaKPIS.recuperados - this.comunidadSelecccionadaKPIS.fallecidos;
+
+            Plotly.react( 
+                this.GraphC.nativeElement,
+                [
+                    {
+                        values: [enfermos, this.comunidadSelecccionadaKPIS.recuperados, this.comunidadSelecccionadaKPIS.fallecidos],
+                        labels: ['Enfermos', 'Recuperados','Defunciones'],
+                        type: 'pie',
+                        marker: {
+                            colors: ["#ff7f0e", "#2d9f2c", "#1f77b4"]
+                        }
+                    }
+                ],
+                { 
+                    
+                        height:420
+                },
+                {responsive: true, displayModeBar: false});
+        }
         
+
+
+
+
         //compare comunidades by total
         plotGraphE1(data){
             Plotly.newPlot( 
@@ -764,9 +885,6 @@ export class CCAAchartComponent implements OnInit {
                         height:420
                 },
                 {responsive: true, displayModeBar: false});
-
-
-
         }
 
 }

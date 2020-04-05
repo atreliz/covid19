@@ -3,6 +3,13 @@
     <h1  style="margin-bottom:20px">Influencia COVID 19 distribuidas por comunidades</h1>
 </header>
 
+
+<header>
+    <h1  class="title_separator">Situación actual de España</h1>
+</header>
+
+<!-- Spain charts -->
+<!-- Spain charts -->
 <!-- Spain charts -->
 <section>
    <ul class="kpis">
@@ -16,7 +23,7 @@
         <li>
             <p class="number">{{jsonResumeSpain.Casos24h | number}}</p>
             <p><span class="material-icons">query_builder</span></p>
-            <p class="lastp">Ultimas 24H</p>
+            <p class="lastp">Casos últimas 24H</p>
         </li>
         <li>
             <p class="number">{{jsonResumeSpain.Casos | number}}</p>
@@ -48,61 +55,76 @@
 
 </section>
 
-<!-- Region selector -->
+
+
+<!-- Comparanción de comunidades -->
+<!-- Comparanción de comunidades -->
+<!-- Comparanción de comunidades -->
+
 <header>
-        
-    <div class="area1">
-        <h2>Comunidades: por sus casos totales</h2>
- 
-    </div>
+    <h1  class="title_separator">Comparanción de comunidades</h1>
 </header>
 
-<!-- 3 charts by Regions -->
+<!--Charts by Regions Totales-->
+<header style="margin-top:10px">
+        <h2>Comunidades: casos totales</h2>
+</header>
 <section class="trisection" >
     <article>
-        <h2>Comunidades por casos acumulados</h2>
+        <h2>Casos totales</h2>
         <div  id="GraphE1" #GraphE1></div>
     </article>
 
     <article >
-        <h2>Comunidades en las ultimas 24H</h2>
+        <h2>Casos en las ultimas 24H</h2>
         <div id="GraphE2" #GraphE2></div>
     </article>
 
     <article >
-        <h2>Comunidades por Inc.14d</h2>
+        <h2>Casos en los útimos 14 días</h2>
         <div id="GraphE3" #GraphE3></div>
     </article>
 </section>
 
-<!-- Region selector -->
+
+<!--Charts by Regions Totales por cada 1000h-->
 <header>
         <h2>Comunidades: casos por cada 1000 habitantes</h2>
 </header>
 
-
-<!-- 3 charts by Regions -->
 <section class="trisection" >
     <article>
-        <h2>Comunidades por casos acumulados</h2>
+        <h2>Casos totales por cada 1000 habitantes</h2>
         <div  id="GraphE4" #GraphE4></div>
     </article>
 
     <article >
-        <h2>Comunidades en las ultimas 24H</h2>
+        <h2>Casos en las ultimas 24H por cada 1000 habitantes</h2>
         <div id="GraphE5" #GraphE5></div>
     </article>
 
     <article >
-        <h2>Comunidades por Inc.14d</h2>
+        <h2>Casos en los útimos 14 días por cada 1000 habitantes</h2>
         <div id="GraphE6" #GraphE6></div>
     </article>
 </section>
 
-<!-- Region selector -->
+
+
+
+<!-- Conoce tu comunidad -->
+<!-- Conoce tu comunidad -->
+<!-- Conoce tu comunidad -->
+
+
+
 <header>
+    <h1  class="title_separator">Conoce el estado de tu comunidad</h1>
+</header>
+<!-- Region selector -->
+<header style="margin-top:10px">
     <div class="area1">
-        <h2>Selecciona tu comunidad</h2>
+        <h2>Selecciona comunidad</h2>
         <select  [ngModel]="selectedCCAA" (ngModelChange)="onChange($event)">
             <option [value]="ccaa.code" *ngFor="let ccaa of options">
                 {{ccaa.name}}
@@ -112,21 +134,74 @@
 </header>
 
 <!-- Region selected charts -->
+
+<section>
+   <ul class="kpis">
+        <li>
+            
+            <p class="number " style="margin-top:15px">{{jsonResumeSpain.Fecha}}</p>
+            <p class="number lastp" style="margin-top:15px">{{jsonResumeSpain.Hora}}h</p>
+            
+            <!--p><span class="material-icons">poll</span></p-->
+        </li>
+        <li>
+            <p class="number">{{comunidadSelecccionadaKPIS.casos | number}}</p>
+            <p><span class="material-icons">add_alarm</span></p>
+            <p class="lastp">Total de casos</p>
+        </li>
+        <li>
+            <p class="number">{{comunidadSelecccionadaKPIS.fallecidos | number}}</p>
+            <p><span class="material-icons">cloud</span></p> 
+            <p class="lastp">Total de fallecidos</p>
+        </li>
+        <li>
+            <p class="number">{{comunidadSelecccionadaKPIS.recuperados | number}}</p>
+            <p><span class="material-icons">directions_walk</span></p>
+            <p class="lastp">Total de recuperados</p>
+        </li>
+        <li>
+            <p class="number">{{comunidadSelecccionadaKPIS.hospitalizados | number}}</p>
+            <p><span class="material-icons">local_hotel</span></p>
+            <p class="lastp">Total de hospitalizados</p>             
+        </li>
+                <li>
+            <p class="number">{{comunidadSelecccionadaKPIS.uci | number}}</p>
+            <p>
+                <span class="material-icons">local_hotel</span>
+                <span class="material-icons">add_alert</span>
+            </p>
+            <p class="lastp">Total de UCI</p>             
+        </li>
+   </ul>
+   
+
+    <article class="pie">
+        <h2 style="margin-bottom:0px">Situación con {{comunidadSelecccionadaKPIS.casos | number}} casos</h2>
+        <div id="GraphC" #GraphC></div>
+    </article>
+
+</section>
+
 <section>
     <article>
-        <h2>COVID 19: Cantidades totales incrementales (valores oficiales)</h2>
+        <h2>COVID 19: valores totales </h2>
         <p class="explain"> Estas gráficas siempre suben por que a cada día se suman los datos del anterior</p>
         <p class="explain"> Lo que hay que fijarse es la pendiente, cuanto mas plana, menor sera el numero de nuevos casos</p>
         <div  id="GraphA" #GraphA></div>
     </article>
 
     <article >
-        <h2>COVID 19: Cantidades por día (valores calculados)</h2>
+        <h2>COVID 19: valores por día ( ver nota **)</h2>
         <p class="explain"> Estas gráficas suben y bajan, por que son los casos totales de cada día</p>
         <p class="explain"> Lo que hay que fijarse es si las columnas van bajando según pasan los días, lo cual indicaría una mejora</p>
         <div id="GraphB" #GraphB></div>
     </article>
 </section>
+
+
+<!-- FOOTER -->
+<!-- FOOTER -->
+<!-- FOOTER -->
 
 <footer>
 
