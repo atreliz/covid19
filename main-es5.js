@@ -742,8 +742,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             var currentline = lines[i].split(","); //console.log("currentline",headers)
 
             for (var j = 0; j < headers.length; j++) {
-              var head = headers[j].replace('\r', '');
-              var value = currentline[j].replace('\r', '');
+              var head = headers[j] ? headers[j].replace('\r', '') : null;
+              var value = currentline[j] ? currentline[j].replace('\r', '') : null;
               obj[head] = value; //console.log("obj",obj)
             }
 
@@ -824,7 +824,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             return item['CCAA Codigo ISO'] == ccaacode;
           });
           this.madridData = cleanDataOneCCAA.slice(10);
-          console.log("clean data", this.madridData);
+          console.log("clean data massageData", this.madridData);
           this.madridDataFull.fechas = this.madridData.map(function (item) {
             return item.Fecha;
           });
