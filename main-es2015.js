@@ -468,8 +468,8 @@ class CCAAchartComponent {
             var currentline = lines[i].split(",");
             //console.log("currentline",headers)
             for (var j = 0; j < headers.length; j++) {
-                var head = headers[j].replace('\r', '');
-                var value = currentline[j].replace('\r', '');
+                var head = headers[j] ? headers[j].replace('\r', '') : null;
+                var value = currentline[j] ? currentline[j].replace('\r', '') : null;
                 obj[head] = value;
                 //console.log("obj",obj)
             }
@@ -535,7 +535,7 @@ class CCAAchartComponent {
         this.fullData = this.myccaadata;
         var cleanDataOneCCAA = this.fullData.filter((item) => item['CCAA Codigo ISO'] == ccaacode);
         this.madridData = cleanDataOneCCAA.slice(10);
-        console.log("clean data", this.madridData);
+        console.log("clean data massageData", this.madridData);
         this.madridDataFull.fechas = this.madridData.map((item) => item.Fecha);
         this.madridDataFull.casos = this.madridData.map((item) => item['Casos '] != "" ? item['Casos '] : 0);
         this.madridDataFull.hospitalizados = this.madridData.map((item) => item.Hospitalizados != "" ? item.Hospitalizados : 0);
