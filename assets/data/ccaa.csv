@@ -1,20 +1,20 @@
-CCAA,Acumulados,Ultimas 24h,Incidencia
-AndalucÃ­a,8767,186,74.83
-AragÃ³n,3449,102,203.97
-Asturias,1679,33,99.43
-Baleares,1369,49,77.51
-Canarias,1725,76,54.24
-Cantabria,1501,18,185.17
-Castilla La Mancha,11077,475,423.64
-Castilla y LeÃ³n,9581,465,296.76
-CataluÃ±a,28323,1499,266.56
-Ceuta,83,0,90.83
-C. Valenciana,7443,109,105.44
-Extremadura,2116,48,138.61
-Galicia,6331,180,182.11
-Madrid,40469,1746,421.96
-Melilla,92,6,74.00
-Murcia,1283,24,60.11
-Navarra,3355,124,357.83
-PaÃ­s Vasco,9021,211,285.04
-La Rioja,2846,127,645.21
+CCAA,Casos,Ultimas 24h,Incidencia acumulada,,
+AndalucÃ­a,8997,230,71.15,,
+AragÃ³n,3549,100,200.26,,
+Asturias,1705,26,90.54,,
+Baleares,1412,43,73.95,,
+Canarias,1762,37,51.31,,
+Cantabria,1572,71,182.76,,
+Castilla La Mancha,11788,711,443.12,,
+Castilla y LeÃ³n,10058,477,296.64,,
+CataluÃ±a,29647,1324,256.80,,
+Ceuta,84,1,88.47,,
+C. Valenciana,7655,212,100.70,,
+Extremadura,2184,68,135.06,,
+Galicia,6538,207,180.96,,
+Madrid,42450,1981,418.00,,
+Melilla,93,1,63.59,,
+Murcia,1326,43,56.83,,
+Navarra,3467,112,346.98,,
+PaÃ­s Vasco,9452,431,279.96,,
+La Rioja,2951,105,638.58,,
