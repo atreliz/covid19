@@ -1,4 +1,4 @@
-CCAA,FECHA,CASOS,Hospitalizados,UCI,Fallecidos,Recuperados
+CCAA Codigo ISO,Fecha,Casos ,Hospitalizados,UCI,Fallecidos,Recuperados
 AN,20/2/2020,,,,,
 AR,20/2/2020,,,,,
 AS,20/2/2020,,,,,
@@ -912,5 +912,5 @@ NC,7/4/2020,3467,1526,124,206,450
 PV,7/4/2020,9452,4982,430,635,4151
 RI,7/4/2020,2951,955,68,177,1061
 ,,,,,,
-NOTA: El objetivo de los datos que se publican en esta web es saber el número de casos acumulados a la fecha y que por tanto no se puede deducir que la diferencia entre un día y el anterior es el número de casos nuevos ya que esos casos pueden haber sido recuperados de fechas anteriores. Cualquier inferencia que se haga sobre las diferencias de un día para otro deben hacerse con precaución y son únicamente la responsabilidad el autor.,,,,,,
-Los datos de estas comunidades son datos de prevalencia (personas ingresadas a fecha de hoy). No reflejan el total de personas que han sido hospitalizadas o ingresadas en UCI  a lo largo del periodo de notificación(CL-CM-MD-VC-MC),,,,,,
+NOTA: El objetivo de los datos que se publican en esta web es saber el nï¿½mero de casos acumulados a la fecha y que por tanto no se puede deducir que la diferencia entre un dï¿½a y el anterior es el nï¿½mero de casos nuevos ya que esos casos pueden haber sido recuperados de fechas anteriores. Cualquier inferencia que se haga sobre las diferencias de un dï¿½a para otro deben hacerse con precauciï¿½n y son ï¿½nicamente la responsabilidad el autor.,,,,,,
+Los datos de estas comunidades son datos de prevalencia (personas ingresadas a fecha de hoy). No reflejan el total de personas que han sido hospitalizadas o ingresadas en UCIï¿½ a lo largo del periodo de notificaciï¿½n(CL-CM-MD-VC-MC),,,,,,
